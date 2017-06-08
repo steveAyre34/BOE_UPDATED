@@ -56,7 +56,7 @@
 		</div>
 		<div style = "width: 100%; margin-top: 5%">
 			<label>Sex</label><input type = "checkbox" name = "sex" id = "sex">
-			<select id = "sex_choice" name = "sex_choice" style = "visibility: hidden"><option selected = "selected" value = "male">Male</option><option value = "female">Female</option></select>
+			<select id = "sex_choice" name = "sex_choice" style = "visibility: hidden"><option selected = "selected" value = "M">Male</option><option value = "F">Female</option></select>
 		</div>
 		<div style = "width: 100%; margin-top: 5%">
 			<label>Registration Date</label><input type = "checkbox" name = "reg_date" id = "reg_date">
@@ -66,27 +66,27 @@
 	<div style = "float: left; width: 30%">
 		<div style = "width: 15%;">
 			<label>All</label>
-			<input type = "checkbox" name = "all_elections" class = "elections" id = "all_elections" checked>
+			<input type = "checkbox" name = "all_elections" class = "elections" id = "all_elections" value = "all" checked>
 		</div>
 		<div style = "width: 15%; margin-top: 1%">
 			<label>General</label>
-			<input type = "checkbox" name = "general_elections" class = "elections" id = "general_elections">
+			<input type = "checkbox" name = "general_elections" class = "elections" id = "general_elections" value = "general">
 		</div>
 		<div style = "margin-top: 1%">
 			<label>Primary</label>
-			<input type = "checkbox" name = "primary_elections" class = "elections" id = "primary_elections">
+			<input type = "checkbox" name = "primary_elections" class = "elections" id = "primary_elections" value = "primary">
 		</div>
 		<div style = "margin-top: 1%">
 			<label>Presidential Primary</label>
-			<input type = "checkbox" name = "pres_primary_elections" class = "elections" id = "pres_primary_elections">
+			<input type = "checkbox" name = "pres_primary_elections" class = "elections" id = "pres_primary_elections" value = "presidential primary">
 		</div>
 		<div style = "margin-top: 1%">
 			<label>Village Primary</label>
-			<input type = "checkbox" name = "village_primary_elections" class = "elections" id = "village_primary_elections">
+			<input type = "checkbox" name = "village_primary_elections" class = "elections" id = "village_primary_elections" value = "village primary">
 		</div>
 		<div style = "margin-top: 1%">
-			<select name = "years_voted"><option value = "all" selected = "selected">All</option><option value = "any">Any</option></select><span>of these years</span>
-			<select name = "voting_years" style = "width: 15%" multiple>
+			<select id = "years_voted" name = "years_voted"><option value = "all" selected = "selected">All</option><option value = "any">Any</option></select><span>of these years</span>
+			<select id = "voting_years" name = "voting_years" style = "width: 15%" multiple>
 			<?php
 				$current_year = date("Y");
 				for($i = $current_year; $i >= 1995; $i--){
@@ -153,7 +153,7 @@ function submitForm(){
 	$("#submit_query").submit();
 }
 function generateCount(){
-	var data = ["household", [],  0, 0, "both", "", [], "", []];
+	var data = ["household", [],  0, 0, "both", "", [], "all", [], ""];
 	//check if individual or household
 	if($("#individual").is(":checked")){
 		data[0] = "individual";
@@ -180,15 +180,30 @@ function generateCount(){
 		data[5] = $("#reg_date_choice").val();
 	}
 	
-	for(var i = 0; i < data.length; i++){
-		alert(data[i]);
-	}
 	
+	//get all elections from each
+	$(".elections").each(function(){
+		var count = 1;
+		if($(this).is(":checked")){
+			data[6].push($(this).val())
+		}
+	});
+	
+	//get any or all years for voting
+	data[7] = $("#years_voted").val();
+	
+	//get all voting years
+	$('#voting_years :selected').each(function(){ 
+		data[8].push($(this).val());
+	});
+	
+	var table_name = <?php echo json_encode($table_name); ?>;
+	data[9] = table_name;
 	
 	$.ajax({
 		type: "POST",
 		url: "generateCount.php",
-		data: {id: "Sample"},
+		data: {id: data, table_name: data[9]},
 		dataType: "json", // Set the data type so jQuery can parse it for you
 		success: function (data){
 			$("#count").val(data);
