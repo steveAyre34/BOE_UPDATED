@@ -93,7 +93,85 @@
 		</div>
 	</div>
 </div>
+<div style = "width: 100%;">
+	<div style = "width: 15%; padding-bottom: 1%; float: left; clear: both; margin-right: 2%">
+		<label><h4>Party</h4></label>
+		<select name = "party" style = "height: 200px; width: 100%" multiple>
+			<?php
+				$result = mysqli_query($conn, "SELECT DISTINCT party from $table_name ORDER BY party");
+				while($row = $result->fetch_assoc()){
+					$party = $row["party"];
+					echo "<option value = '$party'>$party</option>";
+				}
+			?>
+		</select>
+	</div>
+	<div style = "width: 15%; float: left; margin-right: 2%">
+		<label><h4>Town</h4></label>
+		<select name = "town" style = "height: 200px; width: 100%;" multiple>
+			<?php
+				$result = mysqli_query($conn, "SELECT DISTINCT town from $table_name ORDER BY town");
+				while($row = $result->fetch_assoc()){
+					$town = $row["town"];
+					echo "<option value = '$town'>$town</option>";
+				}
+			?>
+		</select>
+	</div>
+	<div style = "width: 15%; float: left; margin-right: 2%">
+		<label><h4>Ward</h4></label>
+		<select name = "ward" style = "height: 200px; width: 100%" multiple>
+			<?php
+				$result = mysqli_query($conn, "SELECT DISTINCT ward from $table_name ORDER BY ward");
+				while($row = $result->fetch_assoc()){
+					$ward = $row["ward"];
+					echo "<option value = '$ward'>$ward</option>";
+				}
+			?>
+		</select>
+	</div>
+</div>
+<div style = "width: 100%;">
+	<div style = "width: 15%; padding-bottom: 10%; float: left; clear: both; margin-right: 2%">
+		<label><h4>Party</h4></label>
+		<select name = "party" style = "height: 200px; width: 100%" multiple>
+			<?php
+				$result = mysqli_query($conn, "SELECT DISTINCT party from $table_name ORDER BY party");
+				while($row = $result->fetch_assoc()){
+					$party = $row["party"];
+					echo "<option value = '$party'>$party</option>";
+				}
+			?>
+		</select>
+	</div>
+	<div style = "width: 15%; float: left; margin-right: 2%">
+		<label><h4>Town</h4></label>
+		<select name = "town" style = "height: 200px; width: 100%;" multiple>
+			<?php
+				$result = mysqli_query($conn, "SELECT DISTINCT town from $table_name ORDER BY town");
+				while($row = $result->fetch_assoc()){
+					$town = $row["town"];
+					echo "<option value = '$town'>$town</option>";
+				}
+			?>
+		</select>
+	</div>
+	<div style = "width: 15%; float: left; margin-right: 2%">
+		<label><h4>Ward</h4></label>
+		<select name = "ward" style = "height: 200px; width: 100%" multiple>
+			<?php
+				$result = mysqli_query($conn, "SELECT DISTINCT ward from $table_name ORDER BY ward");
+				while($row = $result->fetch_assoc()){
+					$ward = $row["ward"];
+					echo "<option value = '$ward'>$ward</option>";
+				}
+			?>
+		</select>
+	</div>
+</div>
 </form>
+<div style = "margin-bottom: 20%">
+</div>
 <div style = "position: fixed; bottom: 0; width: 100%;">
 <input value = "Export" onclick = "submitForm()" type="submit" class="button" style="width: 500px; height: 100px;font-size:30px;background-color:#00C957;"/>
 <input value = "Count" onclick = "generateCount()" type="submit" class="button" style="width: 500px; height: 100px;font-size:30px;background-color:#00C957;"/>
@@ -137,6 +215,9 @@ $(".elections").on("change", function(){
 		$("#general_elections").prop("checked", false);
 		$("#primary_elections").prop("checked", false);
 		$("#pres_primary_elections").prop("checked", false);
+	}
+	if(!$("#all_elections").is(":checked") && !$("#general_elections").is(":checked") && !$("#primary_elections").is(":checked") && !$("#pres_primary_elections").is(":checked")){
+		$("#all_elections").prop("checked", true);
 	}
 });
 $(".elections").on("click", function(){

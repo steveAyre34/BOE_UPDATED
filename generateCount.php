@@ -20,7 +20,6 @@
 	$used_sex = FALSE;
 	$used_reg_date = FALSE;
 	$used_election_info = FALSE;
-	$used_years_voted = FALSE;
 	if($counts_for == "individual"){
 		$sql_query .= "SELECT count(voter_id) as this_count FROM $table_name";
 	}
@@ -100,7 +99,7 @@
 						$history = "history" . $i;
 						$info = $election_info[$ii];
 						if($count == 1){
-							$sql_query .= " WHERE $history LIKE '%{$info}%'";
+							$sql_query .= " WHERE ($history LIKE '%{$info}%'";
 						}
 						else{
 							$sql_query .= " OR $history LIKE '%{$info}%'";
@@ -108,6 +107,7 @@
 						$count++;
 					}
 			}
+			$sql_query .= ")";
 		}
 		else{
 			$count = 1;
@@ -131,49 +131,219 @@
 		if($all_or_any == "all"){
 			if($used_zip == FALSE && $used_age == FALSE && $used_sex == FALSE && $used_reg_date == FALSE){
 				$count = 1;
-				for($i = 1; $i <= 12; $i++){
-					for($ii = 0; $ii < count($election_info); $ii++){
-						for($iii = 1; $iii < count($years_voted); $iii++){
-							$history = "history" . $i;
-							$info = $election_info[$ii];
-							$year = substr($years_voted[$iii], 2);
-							$info_year = $info . $year;
-							if($count == 1){
-								$sql_query .= " WHERE ($history = '$info_year'";
-							}
-							else{
-								$sql_query .= " OR $history = '$info_year'";
-							}
-							$count++;
+				for($i = 0; $i < count($election_info); $i++){
+					$count_2 = 1;
+					for($ii = 1; $ii < count($years_voted); $ii++){
+						$info = $election_info[$i];
+						$year = substr($years_voted[$ii], 2);
+						$info_year = $info . $year;
+						if($count == 1){
+							$sql_query .= " WHERE (('$info_year' IN (history1, history2, history3, history4, history5, history6, history7, history8, history9, history10, history11, history12)";
 						}
+						
+						else if($count_2 == 1){
+							$sql_query .= " AND ('$info_year' IN (history1, history2, history3, history4, history5, history6, history7, history8, history9, history10, history11, history12)";
+						}
+						else{
+							$sql_query .= " AND '$info_year' IN (history1, history2, history3, history4, history5, history6, history7, history8, history9, history10, history11, history12)";
+						}
+						$count++;
+						$count_2++;
 					}
+					$sql_query .= ")";
 				}
 				$sql_query .= ")";
 			}
 			else{
 				$count = 1;
-				for($i = 1; $i <= 12; $i++){
-					for($ii = 0; $ii < count($election_info); $ii++){
-						for($iii = 1; $iii < count($years_voted); $iii++){
-							$history = "history" . $i;
-							$info = $election_info[$ii];
-							$year = substr($years_voted[$iii], 2);
-							$info_year = $info . $year;
-							if($count == 1){
-								$sql_query .= " AND ($history = '$info_year'";
-							}
-							else{
-								$sql_query .= " OR $history = '$info_year'";
-							}
-							$count++;
+				for($i = 0; $i < count($election_info); $i++){
+					$count_2 = 1;
+					for($ii = 1; $ii < count($years_voted); $ii++){
+						$info = $election_info[$i];
+						$year = substr($years_voted[$ii], 2);
+						$info_year = $info . $year;
+						if($count == 1){
+							$sql_query .= " AND (('$info_year' IN (history1, history2, history3, history4, history5, history6, history7, history8, history9, history10, history11, history12)";
 						}
+						
+						else if($count_2 == 1){
+							$sql_query .= " AND ('$info_year' IN (history1, history2, history3, history4, history5, history6, history7, history8, history9, history10, history11, history12)";
+						}
+						else{
+							$sql_query .= " AND '$info_year' IN (history1, history2, history3, history4, history5, history6, history7, history8, history9, history10, history11, history12)";
+						}
+						$count++;
+						$count_2++;
 					}
+					$sql_query .= ")";
+				}
+				$sql_query .= ")";
+			}
+		}
+		else{
+			if($used_zip == FALSE && $used_age == FALSE && $used_sex == FALSE && $used_reg_date == FALSE){
+				$count = 1;
+				for($i = 1; $i < count($years_voted); $i++){
+					$count_2 = 1;
+					for($ii = 0; $ii < count($election_info); $ii++){
+						$info = $election_info[$ii];
+						$year = substr($years_voted[$i], 2);
+						$info_year = $info . $year;
+						if($count == 1){
+							$sql_query .= " WHERE (('$info_year' IN (history1, history2, history3, history4, history5, history6, history7, history8, history9, history10, history11, history12)";
+						}
+						
+						else if($count_2 == 1){
+							$sql_query .= " OR ('$info_year' IN (history1, history2, history3, history4, history5, history6, history7, history8, history9, history10, history11, history12)";
+						}
+						else{
+							$sql_query .= " AND '$info_year' IN (history1, history2, history3, history4, history5, history6, history7, history8, history9, history10, history11, history12)";
+						}
+						$count++;
+						$count_2++;
+					}
+					$sql_query .= ")";
+				}
+				$sql_query .= ")";
+			}
+			else{
+				$count = 1;
+				for($i = 1; $i < count($years_voted); $i++){
+					$count_2 = 1;
+					for($ii = 0; $ii < count($election_info); $ii++){
+						$info = $election_info[$ii];
+						$year = substr($years_voted[$i], 2);
+						$info_year = $info . $year;
+						if($count == 1){
+							$sql_query .= " AND (('$info_year' IN (history1, history2, history3, history4, history5, history6, history7, history8, history9, history10, history11, history12)";
+						}
+						
+						else if($count_2 == 1){
+							$sql_query .= " OR ('$info_year' IN (history1, history2, history3, history4, history5, history6, history7, history8, history9, history10, history11, history12)";
+						}
+						else{
+							$sql_query .= " AND '$info_year' IN (history1, history2, history3, history4, history5, history6, history7, history8, history9, history10, history11, history12)";
+						}
+						$count++;
+						$count_2++;
+					}
+					$sql_query .= ")";
 				}
 				$sql_query .= ")";
 			}
 		}
 	}
-	echo $sql_query;
+	else{
+		if($all_or_any == "all"){
+			if($used_zip == FALSE && $used_age == FALSE && $used_sex == FALSE && $used_reg_date == FALSE){
+				$count = 1;
+				for($i = 1; $i < count($years_voted); $i++){
+						$count_2 = 1;
+						for($ii = 1; $ii <= 12; $ii++){
+							$history = "history" . $ii;
+							$year = substr($years_voted[$i], 2);
+							if($count == 1){
+								$sql_query .= " WHERE (($history LIKE '%{$year}%'";
+							}
+							else if($count_2 == 1){
+								$sql_query .= " AND ($history LIKE '%{$year}%'";
+							}
+							else{
+								$sql_query .= " OR $history LIKE '%{$year}%'";
+							}
+							$count++;
+							$count_2++;
+							$used_election_info = TRUE;
+						}
+						$sql_query .= ")";
+				}
+				if($used_election_info == TRUE){
+					$sql_query .= ")";
+				}
+			}
+			else{
+				$count = 1;
+				for($i = 1; $i < count($years_voted); $i++){
+						$count_2 = 1;
+						for($ii = 1; $ii <= 12; $ii++){
+							$history = "history" . $ii;
+							$year = substr($years_voted[$i], 2);
+							if($count == 1){
+								$sql_query .= " AND (($history LIKE '%{$year}%'";
+							}
+							else if($count_2 == 1){
+								$sql_query .= " AND ($history LIKE '%{$year}%'";
+							}
+							else{
+								$sql_query .= " OR $history LIKE '%{$year}%'";
+							}
+							$count++;
+							$count_2++;
+							$used_election_info = TRUE;
+						}
+						$sql_query .= ")";
+				}
+				if($used_election_info == TRUE){
+					$sql_query .= ")";
+				}
+			}
+		}
+		else{
+			if($used_zip == FALSE && $used_age == FALSE && $used_sex == FALSE && $used_reg_date == FALSE){
+				$count = 1;
+				for($i = 1; $i < count($years_voted); $i++){
+						$count_2 = 1;
+						for($ii = 1; $ii <= 12; $ii++){
+							$history = "history" . $ii;
+							$year = substr($years_voted[$i], 2);
+							if($count == 1){
+								$sql_query .= " WHERE (($history LIKE '%{$year}%'";
+							}
+							else if($count_2 == 1){
+								$sql_query .= " OR ($history LIKE '%{$year}%'";
+							}
+							else{
+								$sql_query .= " OR $history LIKE '%{$year}%'";
+							}
+							$count++;
+							$count_2++;
+							$used_election_info = TRUE;
+						}
+						$sql_query .= ")";
+				}
+				if($used_election_info == TRUE){
+					$sql_query .= ")";
+				}
+			}
+			else{
+				$count = 1;
+				for($i = 1; $i < count($years_voted); $i++){
+						$count_2 = 1;
+						for($ii = 1; $ii <= 12; $ii++){
+							$history = "history" . $ii;
+							$year = substr($years_voted[$i], 2);
+							if($count == 1){
+								$sql_query .= " AND (($history LIKE '%{$year}%'";
+							}
+							else if($count_2 == 1){
+								$sql_query .= " OR ($history LIKE '%{$year}%'";
+							}
+							else{
+								$sql_query .= " OR $history LIKE '%{$year}%'";
+							}
+							$count++;
+							$count_2++;
+							$used_election_info = TRUE;
+						}
+						echo "here";
+						$sql_query .= ")";
+				}
+				if($used_election_info == TRUE){
+					$sql_query .= ")";
+				}
+			}
+		}
+	}
 	$result = mysqli_query($conn, $sql_query) or die("error");
 	$row = $result->fetch_assoc();
 	$count = $row["this_count"];
