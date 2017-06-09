@@ -70,19 +70,15 @@
 		</div>
 		<div style = "width: 15%; margin-top: 1%">
 			<label>General</label>
-			<input type = "checkbox" name = "general_elections" class = "elections" id = "general_elections" value = "general">
+			<input type = "checkbox" name = "general_elections" class = "elections" id = "general_elections" value = "GE">
 		</div>
 		<div style = "margin-top: 1%">
 			<label>Primary</label>
-			<input type = "checkbox" name = "primary_elections" class = "elections" id = "primary_elections" value = "primary">
+			<input type = "checkbox" name = "primary_elections" class = "elections" id = "primary_elections" value = "PE">
 		</div>
 		<div style = "margin-top: 1%">
 			<label>Presidential Primary</label>
-			<input type = "checkbox" name = "pres_primary_elections" class = "elections" id = "pres_primary_elections" value = "presidential primary">
-		</div>
-		<div style = "margin-top: 1%">
-			<label>Village Primary</label>
-			<input type = "checkbox" name = "village_primary_elections" class = "elections" id = "village_primary_elections" value = "village primary">
+			<input type = "checkbox" name = "pres_primary_elections" class = "elections" id = "pres_primary_elections" value = "PP">
 		</div>
 		<div style = "margin-top: 1%">
 			<select id = "years_voted" name = "years_voted"><option value = "all" selected = "selected">All</option><option value = "any">Any</option></select><span>of these years</span>
@@ -141,7 +137,6 @@ $(".elections").on("change", function(){
 		$("#general_elections").prop("checked", false);
 		$("#primary_elections").prop("checked", false);
 		$("#pres_primary_elections").prop("checked", false);
-		$("#village_primary_elections").prop("checked", false);
 	}
 });
 $(".elections").on("click", function(){
@@ -153,7 +148,7 @@ function submitForm(){
 	$("#submit_query").submit();
 }
 function generateCount(){
-	var data = ["household", [],  0, 0, "both", "", [], "all", [], ""];
+	var data = ["household", [],  0, 0, "both", "", [], "all", ["DN"], ""];
 	//check if individual or household
 	if($("#individual").is(":checked")){
 		data[0] = "individual";
@@ -193,7 +188,8 @@ function generateCount(){
 	data[7] = $("#years_voted").val();
 	
 	//get all voting years
-	$('#voting_years :selected').each(function(){ 
+	$('#voting_years :selected').each(function(){
+		data[8][0] = "U";
 		data[8].push($(this).val());
 	});
 	

@@ -70,8 +70,110 @@
 	
 	//add sex to statement
 	if($sex != "both"){
-		if()
+		if($used_age == FALSE && $used_zip == FALSE){
+			$sql_query .= " WHERE sex = '$sex'";
+		}
+		else{
+			$sql_query .= " AND sex = '$sex'";
+		}
+		
+		$used_sex = TRUE;
 	}
+	
+	//add registration to statement
+	if($reg_date != ""){
+		if($used_zip == FALSE && $used_age == FALSE && $used_sex == FALSE){
+			$sql_query .= " WHERE reg_datetime >= '$reg_date'";
+		}
+		else{
+			$sql_query .= " AND reg_datetime >= '$reg_date'";
+		}
+		$used_reg_date = TRUE;
+	}
+	
+	//add election info to statement
+	if($election_info[0] != "all" && $years_voted[0] == "DN"){
+		if($used_zip == FALSE && $used_age == FALSE && $used_sex == FALSE && $used_reg_date == FALSE){
+			$count = 1;
+			for($i = 1; $i <= 12; $i++){
+					for($ii = 0; $ii < count($election_info); $ii++){
+						$history = "history" . $i;
+						$info = $election_info[$ii];
+						if($count == 1){
+							$sql_query .= " WHERE $history LIKE '%{$info}%'";
+						}
+						else{
+							$sql_query .= " OR $history LIKE '%{$info}%'";
+						}
+						$count++;
+					}
+			}
+		}
+		else{
+			$count = 1;
+			for($i = 1; $i <= 12; $i++){
+					for($ii = 0; $ii < count($election_info); $ii++){
+						$history = "history" . $i;
+						$info = $election_info[$ii];
+						if($count == 1){
+							$sql_query .= " AND ($history LIKE '%{$info}%'";
+						}
+		                else{
+							$sql_query .= " OR $history LIKE '%{$info}%'";
+						}
+						$count++;
+					}
+			}
+			$sql_query .= ")";
+		}
+	}
+	else if($election_info[0] != "all" && $years_voted[0] == "U"){
+		if($all_or_any == "all"){
+			if($used_zip == FALSE && $used_age == FALSE && $used_sex == FALSE && $used_reg_date == FALSE){
+				$count = 1;
+				for($i = 1; $i <= 12; $i++){
+					for($ii = 0; $ii < count($election_info); $ii++){
+						for($iii = 1; $iii < count($years_voted); $iii++){
+							$history = "history" . $i;
+							$info = $election_info[$ii];
+							$year = substr($years_voted[$iii], 2);
+							$info_year = $info . $year;
+							if($count == 1){
+								$sql_query .= " WHERE ($history = '$info_year'";
+							}
+							else{
+								$sql_query .= " OR $history = '$info_year'";
+							}
+							$count++;
+						}
+					}
+				}
+				$sql_query .= ")";
+			}
+			else{
+				$count = 1;
+				for($i = 1; $i <= 12; $i++){
+					for($ii = 0; $ii < count($election_info); $ii++){
+						for($iii = 1; $iii < count($years_voted); $iii++){
+							$history = "history" . $i;
+							$info = $election_info[$ii];
+							$year = substr($years_voted[$iii], 2);
+							$info_year = $info . $year;
+							if($count == 1){
+								$sql_query .= " AND ($history = '$info_year'";
+							}
+							else{
+								$sql_query .= " OR $history = '$info_year'";
+							}
+							$count++;
+						}
+					}
+				}
+				$sql_query .= ")";
+			}
+		}
+	}
+	echo $sql_query;
 	$result = mysqli_query($conn, $sql_query) or die("error");
 	$row = $result->fetch_assoc();
 	$count = $row["this_count"];
