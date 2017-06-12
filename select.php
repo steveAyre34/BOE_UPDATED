@@ -20,8 +20,7 @@
 <!--Choosing the table headers for the exported file-->
 <table width="800" border="1" cellpadding="10">
 	<tr valign="bottom"><td class="dcheader" style = "width: 100%"><h2>Exported Table Headers</h2></td></tr>
-	<tr valign="bottom"><td class="dcheader"><input type="checkbox" name="standardcols" id="standardcols" checked="checked" disabled="disabled" title="Standard output" /></td><td><label>VoterID, Full Name, Address/City/State/ZIP</label></td></tr>
-	<tr valign="bottom"><td class="dcheader"><input type="checkbox" name="phone_col" id="phone_col"></td><td><label>Phone Number (Limited Data)</label></td></tr>
+	<tr valign="bottom"><td class="dcheader"><input type="checkbox" name="standardcols" id="standardcols" checked="checked" title="Standard output" /></td><td><label>VoterID, Full Name, Address/City/State/ZIP</label></td></tr>
 	<tr valign="bottom"><td class="dcheader"><input type="checkbox" name="voter_status_col" id="voter_status_col"></td><td><label>Voter Status</label></td></tr>
 	<tr valign="bottom"><td class="dcheader"><input type="checkbox" name="reason_col" id="reason_col"></td><td><label>Reason</label></td></tr>
 	<tr valign="bottom"><td class="dcheader"><input type="checkbox" name="absentee_col" id="absentee_col"></td><td><label>Absentee</label></td></tr>
@@ -298,17 +297,21 @@
 		</select>
 	</div>
 </div>
+<input id = "query" style = "display: none" name = "query" value = "">
 </form>
 <div style = "margin-bottom: 20%">
 </div>
 <div style = "position: fixed; bottom: 0; width: 100%;">
 <input value = "Export" onclick = "submitForm()" type="submit" class="button" style="width: 500px; height: 100px;font-size:30px;background-color:#00C957;"/>
-<input value = "Count" onclick = "generateCount()" type="submit" class="button" style="width: 500px; height: 100px;font-size:30px;background-color:#00C957;"/>
+<input value = "Count and Retrieve Query" onclick = "generateCount()" type="submit" class="button" style="width: 500px; height: 100px;font-size:30px;background-color:#00C957;"/>
 <input id = "count" placeholder = "Generated Count" onclick = "generateCount()" class="button" style="width: 500px; height: 100px;font-size:30px;" readonly>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
+$("#standardcols").on("change", function(){
+	$('#standardcols').prop('checked', true);
+});
 $("#household").on("change", function(){
 	$('#individual').prop('checked', false);
 });
@@ -560,7 +563,8 @@ function generateCount(){
 		data: {id: data, table_name: data[9]},
 		dataType: "json", // Set the data type so jQuery can parse it for you
 		success: function (data){
-			$("#count").val(data);
+			$("#count").val(data[0]);
+			$("#query").val(data[1]);
 		}
 	});
 }

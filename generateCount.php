@@ -1,6 +1,6 @@
 <?php
 	require("connection.php");
-	
+	session_start();
 	$data = $_POST["id"];
 	//Build SQL QUERY
 	$counts_for = $data[0];
@@ -56,7 +56,7 @@
 		$sql_query .= "SELECT count(voter_id) as this_count FROM $table_name";
 	}
 	else{
-		$sql_query .= "SELECT count(DISTINCT last_name, street_no, street_name) as this_count FROM $table_name";
+		$sql_query .= "SELECT count(DISTINCT last_name, street_no, street_name, apt_no) as this_count FROM $table_name";
 	}
 	//add zipcodes to statement
 	$count = 1;
@@ -1026,5 +1026,6 @@
 	$result = mysqli_query($conn, $sql_query) or die("error");
 	$row = $result->fetch_assoc();
 	$count = $row["this_count"];
-	echo json_encode($count);
+	$array = array($count, $sql_query);
+	echo json_encode($array);
 ?>
