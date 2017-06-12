@@ -96,9 +96,10 @@
 <div style = "width: 100%;">
 	<div style = "width: 15%; padding-bottom: 1%; float: left; clear: both; margin-right: 2%">
 		<label><h4>Party</h4></label>
-		<select name = "party" style = "height: 200px; width: 100%" multiple>
+		<select id = "party" name = "party" style = "height: 200px; width: 100%" multiple>
+		<option value = "ignore" selected = "selected">--ignore--</option>
 			<?php
-				$result = mysqli_query($conn, "SELECT DISTINCT party from $table_name ORDER BY party");
+				$result = mysqli_query($conn, "SELECT DISTINCT party from $table_name WHERE party != '' ORDER BY party");
 				while($row = $result->fetch_assoc()){
 					$party = $row["party"];
 					echo "<option value = '$party'>$party</option>";
@@ -108,9 +109,10 @@
 	</div>
 	<div style = "width: 15%; float: left; margin-right: 2%">
 		<label><h4>Town</h4></label>
-		<select name = "town" style = "height: 200px; width: 100%;" multiple>
+		<select id = "town" name = "town" style = "height: 200px; width: 100%;" multiple>
+		<option value = "ignore" selected = "selected">--ignore--</option>
 			<?php
-				$result = mysqli_query($conn, "SELECT DISTINCT town from $table_name ORDER BY town");
+				$result = mysqli_query($conn, "SELECT DISTINCT town from $table_name WHERE town != '' ORDER BY town");
 				while($row = $result->fetch_assoc()){
 					$town = $row["town"];
 					echo "<option value = '$town'>$town</option>";
@@ -120,9 +122,10 @@
 	</div>
 	<div style = "width: 15%; float: left; margin-right: 2%">
 		<label><h4>Ward</h4></label>
-		<select name = "ward" style = "height: 200px; width: 100%" multiple>
+		<select id = "ward" name = "ward" style = "height: 200px; width: 100%" multiple>
+		<option value = "ignore" selected = "selected">--ignore--</option>
 			<?php
-				$result = mysqli_query($conn, "SELECT DISTINCT ward from $table_name ORDER BY ward");
+				$result = mysqli_query($conn, "SELECT DISTINCT ward from $table_name WHERE ward != '' ORDER BY ward");
 				while($row = $result->fetch_assoc()){
 					$ward = $row["ward"];
 					echo "<option value = '$ward'>$ward</option>";
@@ -132,38 +135,164 @@
 	</div>
 </div>
 <div style = "width: 100%;">
-	<div style = "width: 15%; padding-bottom: 10%; float: left; clear: both; margin-right: 2%">
-		<label><h4>Party</h4></label>
-		<select name = "party" style = "height: 200px; width: 100%" multiple>
+	<div style = "width: 15%; padding-bottom: 1%; float: left; clear: both; margin-right: 2%">
+		<label><h4>District</h4></label>
+		<select id = "district" name = "district" style = "height: 200px; width: 100%" multiple>
+		<option value = "ignore" selected = "selected">--ignore--</option>
 			<?php
-				$result = mysqli_query($conn, "SELECT DISTINCT party from $table_name ORDER BY party");
+				$result = mysqli_query($conn, "SELECT DISTINCT district from $table_name WHERE district != '' ORDER BY district");
 				while($row = $result->fetch_assoc()){
-					$party = $row["party"];
-					echo "<option value = '$party'>$party</option>";
+					$district = $row["district"];
+					echo "<option value = '$district'>$district</option>";
 				}
 			?>
 		</select>
 	</div>
 	<div style = "width: 15%; float: left; margin-right: 2%">
-		<label><h4>Town</h4></label>
-		<select name = "town" style = "height: 200px; width: 100%;" multiple>
+		<label><h4>Congressional District</h4></label>
+		<select id = "cong_district" name = "cong_district" style = "height: 200px; width: 100%;" multiple>
+		<option value = "ignore" selected = "selected">--ignore--</option>
 			<?php
-				$result = mysqli_query($conn, "SELECT DISTINCT town from $table_name ORDER BY town");
+				$result = mysqli_query($conn, "SELECT DISTINCT cong_district from $table_name WHERE cong_district != '' ORDER BY cong_district");
 				while($row = $result->fetch_assoc()){
-					$town = $row["town"];
-					echo "<option value = '$town'>$town</option>";
+					$cong_district = $row["cong_district"];
+					echo "<option value = '$cong_district'>$cong_district</option>";
 				}
 			?>
 		</select>
 	</div>
 	<div style = "width: 15%; float: left; margin-right: 2%">
-		<label><h4>Ward</h4></label>
-		<select name = "ward" style = "height: 200px; width: 100%" multiple>
+		<label><h4>Senate District</h4></label>
+		<select id = "sen_district" name = "sen_district" style = "height: 200px; width: 100%" multiple>
+		<option value = "ignore" selected = "selected">--ignore--</option>
 			<?php
-				$result = mysqli_query($conn, "SELECT DISTINCT ward from $table_name ORDER BY ward");
+				$result = mysqli_query($conn, "SELECT DISTINCT sen_district from $table_name WHERE sen_district != '' ORDER BY sen_district");
 				while($row = $result->fetch_assoc()){
-					$ward = $row["ward"];
-					echo "<option value = '$ward'>$ward</option>";
+					$sen_district = $row["sen_district"];
+					echo "<option value = '$sen_district'>$sen_district</option>";
+				}
+			?>
+		</select>
+	</div>
+</div>
+<div style = "width: 100%;">
+	<div style = "width: 15%; padding-bottom: 1%; float: left; clear: both; margin-right: 2%">
+		<label><h4>School District</h4></label>
+		<select id = "school_district" name = "school_district" style = "height: 200px; width: 100%" multiple>
+		<option value = "ignore" selected = "selected">--ignore--</option>
+			<?php
+				$result = mysqli_query($conn, "SELECT DISTINCT school_district from $table_name WHERE school_district != '' ORDER BY school_district");
+				while($row = $result->fetch_assoc()){
+					$school_district = $row["school_district"];
+					echo "<option value = '$school_district'>$school_district</option>";
+				}
+			?>
+		</select>
+	</div>
+	<div style = "width: 15%; float: left; margin-right: 2%">
+		<label><h4>Assembly District</h4></label>
+		<select id = "asm_district" name = "asm_district" style = "height: 200px; width: 100%;" multiple>
+		<option value = "ignore" selected = "selected">--ignore--</option>
+			<?php
+				$result = mysqli_query($conn, "SELECT DISTINCT asm_district from $table_name WHERE asm_district != '' ORDER BY asm_district");
+				while($row = $result->fetch_assoc()){
+					$asm_district = $row["asm_district"];
+					echo "<option value = '$asm_district'>$asm_district</option>";
+				}
+			?>
+		</select>
+	</div>
+	<div style = "width: 15%; float: left; margin-right: 2%">
+		<label><h4>Fire District</h4></label>
+		<select id = "fire_district" name = "fire_district" style = "height: 200px; width: 100%" multiple>
+		<option value = "ignore" selected = "selected">--ignore--</option>
+			<?php
+				$result = mysqli_query($conn, "SELECT DISTINCT fire_district from $table_name WHERE fire_district != '' ORDER BY fire_district");
+				while($row = $result->fetch_assoc()){
+					$fire_district = $row["fire_district"];
+					echo "<option value = '$fire_district'>$fire_district</option>";
+				}
+			?>
+		</select>
+	</div>
+</div>
+<div style = "width: 100%;">
+	<div style = "width: 15%; padding-bottom: 1%; float: left; clear: both; margin-right: 2%">
+		<label><h4>Legislative District</h4></label>
+		<select id = "leg_district" name = "leg_district" style = "height: 200px; width: 100%" multiple>
+		<option value = "ignore" selected = "selected">--ignore--</option>
+			<?php
+				$result = mysqli_query($conn, "SELECT DISTINCT leg_district from $table_name WHERE leg_district != '' ORDER BY leg_district");
+				while($row = $result->fetch_assoc()){
+					$leg_district = $row["leg_district"];
+					echo "<option value = '$leg_district'>$leg_district</option>";
+				}
+			?>
+		</select>
+	</div>
+	<div style = "width: 15%; float: left; margin-right: 2%">
+		<label><h4>Village</h4></label>
+		<select id = "village" name = "village" style = "height: 200px; width: 100%;" multiple>
+		<option value = "ignore" selected = "selected">--ignore--</option>
+			<?php
+				$result = mysqli_query($conn, "SELECT DISTINCT village from $table_name WHERE village != '' ORDER BY village");
+				while($row = $result->fetch_assoc()){
+					$village = $row["village"];
+					echo "<option value = '$village'>$village</option>";
+				}
+			?>
+		</select>
+	</div>
+	<div style = "width: 15%; float: left; margin-right: 2%">
+		<label><h4>User 1</h4></label>
+		<select id = "user1" name = "user1" style = "height: 200px; width: 100%" multiple>
+		<option value = "ignore" selected = "selected">--ignore--</option>
+			<?php
+				$result = mysqli_query($conn, "SELECT DISTINCT user1 from $table_name WHERE user1 != '' ORDER BY user1");
+				while($row = $result->fetch_assoc()){
+					$user1 = $row["user1"];
+					echo "<option value = '$user1'>$user1</option>";
+				}
+			?>
+		</select>
+	</div>
+</div>
+<div style = "width: 100%;">
+	<div style = "width: 15%; float: left; margin-right: 2%; padding-bottom: 10%; clear: both">
+		<label><h4>User 2</h4></label>
+		<select id = "user2" name = "user2" style = "height: 200px; width: 100%" multiple>
+		<option value = "ignore" selected = "selected">--ignore--</option>
+			<?php
+				$result = mysqli_query($conn, "SELECT DISTINCT user2 from $table_name WHERE user2 != '' ORDER BY user2");
+				while($row = $result->fetch_assoc()){
+					$user2 = $row["user2"];
+					echo "<option value = '$user2'>$user2</option>";
+				}
+			?>
+		</select>
+	</div>
+	<div style = "width: 15%; float: left; margin-right: 2%">
+		<label><h4>User 3</h4></label>
+		<select id = "user3" name = "user3" style = "height: 200px; width: 100%" multiple>
+		<option value = "ignore" selected = "selected">--ignore--</option>
+			<?php
+				$result = mysqli_query($conn, "SELECT DISTINCT user3 from $table_name WHERE user3 != '' ORDER BY user3");
+				while($row = $result->fetch_assoc()){
+					$user3 = $row["user3"];
+					echo "<option value = '$user3'>$user3</option>";
+				}
+			?>
+		</select>
+	</div>
+	<div style = "width: 15%; float: left; margin-right: 2%">
+		<label><h4>User 4</h4></label>
+		<select id = "user4" name = "user4" style = "height: 200px; width: 100%" multiple>
+		<option value = "ignore" selected = "selected">--ignore--</option>
+			<?php
+				$result = mysqli_query($conn, "SELECT DISTINCT user4 from $table_name WHERE user4 != '' ORDER BY user4");
+				while($row = $result->fetch_assoc()){
+					$user4 = $row["user4"];
+					echo "<option value = '$user4'>$user4</option>";
 				}
 			?>
 		</select>
@@ -229,7 +358,7 @@ function submitForm(){
 	$("#submit_query").submit();
 }
 function generateCount(){
-	var data = ["household", [],  0, 0, "both", "", [], "all", ["DN"], ""];
+	var data = ["household", [],  0, 0, "both", "", [], "all", ["DN"], "", [], [], [], [], [], [], [], [], [], [], [], [], [], [], []];
 	//check if individual or household
 	if($("#individual").is(":checked")){
 		data[0] = "individual";
@@ -276,6 +405,154 @@ function generateCount(){
 	
 	var table_name = <?php echo json_encode($table_name); ?>;
 	data[9] = table_name;
+	
+	//check for all parties
+	var count = 0;
+	$('#party :selected').each(function(){ 
+		data[10].push($(this).val());
+		count++;
+	});
+	if(count == 0){
+		data[10].push("ignore");
+	}
+	
+	//check for towns
+	count = 0;
+	$('#town :selected').each(function(){ 
+		data[11].push($(this).val());
+		count++;
+	});
+	if(count == 0){
+		data[11].push("ignore");
+	}
+	
+	//check for all wards
+	count = 0;
+	$('#ward :selected').each(function(){ 
+		data[12].push($(this).val());
+		count++;
+	});
+	if(count == 0){
+		data[12].push("ignore");
+	}
+	
+	//check for all districts
+	count = 0;
+	$('#district :selected').each(function(){ 
+		data[13].push($(this).val());
+		count++;
+	});
+	if(count == 0){
+		data[13].push("ignore");
+	}
+	
+	//check for all congressional Districts
+	count = 0;
+	$('#cong_district :selected').each(function(){ 
+		data[14].push($(this).val());
+		count++;
+	});
+	if(count == 0){
+		data[14].push("ignore");
+	}
+	
+	//check for all senate districts
+	count = 0;
+	$('#sen_district :selected').each(function(){ 
+		data[15].push($(this).val());
+		count++;
+	});
+	if(count == 0){
+		data[15].push("ignore");
+	}
+	
+	//check for all school districts
+	count = 0;
+	$('#school_district :selected').each(function(){ 
+		data[16].push($(this).val());
+		count++;
+	});
+	if(count == 0){
+		data[16].push("ignore");
+	}
+	
+	//check for all assembly districts
+	count = 0;
+	$('#asm_district :selected').each(function(){ 
+		data[17].push($(this).val());
+		count++;
+	});
+	if(count == 0){
+		data[17].push("ignore");
+	}
+	
+	//check for all fire districts
+	count = 0;
+	$('#fire_district :selected').each(function(){ 
+		data[18].push($(this).val());
+		count++;
+	});
+	if(count == 0){
+		data[18].push("ignore");
+	}
+	
+	//check for all legislative districts
+	count = 0;
+	$('#leg_district :selected').each(function(){ 
+		data[19].push($(this).val());
+		count++;
+	});
+	if(count == 0){
+		data[19].push("ignore");
+	}
+	
+	//check for all villages
+	count = 0;
+	$('#village :selected').each(function(){ 
+		data[20].push($(this).val());
+		count++;
+	});
+	if(count == 0){
+		data[20].push("ignore");
+	}
+	
+	//check for all user 1, user 2, user 3, and user 4
+	count = 0;
+	$('#user1 :selected').each(function(){ 
+		data[21].push($(this).val());
+		count++;
+	});
+	if(count == 0){
+		data[21].push("ignore");
+	}
+	
+	count = 0;
+	$('#user2 :selected').each(function(){ 
+		data[22].push($(this).val());
+		count++;
+	});
+	if(count == 0){
+		data[22].push("ignore");
+	}
+	
+	count = 0;
+	$('#user3 :selected').each(function(){ 
+		data[23].push($(this).val());
+		count++;
+	});
+	if(count == 0){
+		data[23].push("ignore");
+	}
+	
+	count = 0;
+	$('#user4 :selected').each(function(){ 
+		data[24].push($(this).val());
+		count++;
+	});
+	if(count == 0){
+		data[24].push("ignore");
+	}
+	
 	
 	$.ajax({
 		type: "POST",
