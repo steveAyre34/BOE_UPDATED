@@ -1,10 +1,12 @@
 <?php
 	require("header.php");
 	require("connection.php");
+	session_start();
 	$county = $_GET["county"];
 	$county = lcfirst($county);
 	//table to get data from
 	$table_name = $county . "_import";
+	$_SESSION["table_name"] = $table_name;
 	$result = mysqli_query($conn, "SELECT create_time FROM INFORMATION_SCHEMA.TABLES WHERE table_name = '$table_name'") or die("error");
 	$row = $result->fetch_assoc();
 	$date_uploaded = $row["create_time"];
@@ -58,7 +60,7 @@
 			<select id = "sex_choice" name = "sex_choice" style = "visibility: hidden"><option selected = "selected" value = "M">Male</option><option value = "F">Female</option></select>
 		</div>
 		<div style = "width: 100%; margin-top: 5%">
-			<label>Registration Date</label><input type = "checkbox" name = "reg_date" id = "reg_date">
+			<label>After Registration Date</label><input type = "checkbox" name = "reg_date" id = "reg_date">
 			<input id = "reg_date_choice" name = "reg_date_choice" style = "visibility: hidden" type = "date">
 		</div>
 	</div>

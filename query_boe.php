@@ -1,4 +1,6 @@
 <?php
+	session_start();
+	$table_name = $_SESSION["table_name"];
 	require("connection.php");
 	$file = fopen("php://memory", "w");
 	$query = $_POST["query"];
@@ -19,10 +21,45 @@
 	}
 	$query = str_replace("count(voter_id) as this_count", $columns_selected, $query);
 	$query = str_replace("count(DISTINCT last_name, street_no, street_name, apt_no) as this_count", $columns_selected, $query);
+	$sql_count = "SELECT ";
+	if(isset($_POST["household"])){
+		$query .= " GROUP BY last_name, street_no, street_name, apt_no";
+		$result = mysqli_query($conn, $query);
+		$count = 1;
+		while($row = $result->fetch_assoc()){
+			$last_name = $row["last_name"];
+			$street_no = $row["street_no"];
+			$street_name = $row["street_name"];
+			$apt_no = $row["apt_no"];
+			$sql_count .= "sum(last_name = '$last_name' AND street_no = '$street_no' AND street_name = '$street_name' AND apt_no = '$apt_no') as count" . $count . ", ";
+			$count++;
+		}
+		$sql_count = rtrim($sql_count,", ");
+		$sql_count .= " FROM $table_name";
+		//echo $sql_count;
+	}
 	$result = mysqli_query($conn, $query);
 	fputcsv($file, $headers);
-	while($row = $result->fetch_assoc()){
-		fputcsv($file, $row);
+	if(isset($_POST["household"])){
+		$result_counts = mysqli_query($conn, $sql_count);
+		$row_counts = $result_counts->fetch_assoc();
+		$count = 1;
+		while($row = $result->fetch_assoc()){
+			if($row_counts["count" . $count] > 1){
+				$row["last_name"] = "The " . $row["last_name"] . " Family";
+				$row["first_name"] = "";
+				$row["middle_name"] = "";
+				fputcsv($file, $row);
+			}
+			else{
+				fputcsv($file, $row);
+			}
+		}
+	}
+	else{
+		while($row = $result->fetch_assoc()){
+			fputcsv($file, $row);
+		}
 	}
 	fseek($file, 0);
 	header('Content-Type: application/csv');
