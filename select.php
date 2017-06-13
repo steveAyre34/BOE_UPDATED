@@ -304,13 +304,16 @@
 <div style = "margin-bottom: 20%">
 </div>
 <div style = "position: fixed; bottom: 0; width: 100%;">
-<input value = "Export" onclick = "submitForm()" type="submit" class="button" style="width: 500px; height: 100px;font-size:30px;background-color:#00C957;"/>
+<input id = "export" value = "Export" onclick = "submitForm()" type="submit" class="button" style="display: none; width: 500px; height: 100px;font-size:30px;background-color:#00C957;"/>
 <input value = "Count and Retrieve Query" onclick = "generateCount()" type="submit" class="button" style="width: 500px; height: 100px;font-size:30px;background-color:#00C957;"/>
 <input id = "count" placeholder = "Generated Count" onclick = "generateCount()" class="button" style="width: 500px; height: 100px;font-size:30px;" readonly>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
+$('#submit_query input').on("change", function(){
+    $("#export").hide(1000);
+});
 $("#standardcols").on("change", function(){
 	$('#standardcols').prop('checked', true);
 });
@@ -363,6 +366,7 @@ function submitForm(){
 	$("#submit_query").submit();
 }
 function generateCount(){
+	$("#export").show(1000);
 	var data = ["household", [],  0, 0, "both", "", [], "all", ["DN"], "", [], [], [], [], [], [], [], [], [], [], [], [], [], [], []];
 	//check if individual or household
 	if($("#individual").is(":checked")){

@@ -1023,6 +1023,7 @@
 		}
 		$used_user4 = TRUE;
 	}
+	$sql_query .= " ORDER BY last_name, street_no, street_name, apt_no";
 	$result = mysqli_query($conn, $sql_query) or die("error");
 	$row = $result->fetch_assoc();
 	$count = $row["this_count"];

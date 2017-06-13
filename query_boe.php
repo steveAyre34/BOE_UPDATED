@@ -21,40 +21,34 @@
 	}
 	$query = str_replace("count(voter_id) as this_count", $columns_selected, $query);
 	$query = str_replace("count(DISTINCT last_name, street_no, street_name, apt_no) as this_count", $columns_selected, $query);
-	$sql_count = "SELECT ";
-	$array_counts = array();
+
 	if(isset($_POST["household"])){
-		$query .= " GROUP BY last_name, street_no, street_name, apt_no";
 		$result = mysqli_query($conn, $query);
-		$count = 1;
+		$array_unique_family = array();
+		$array_unique_family_counts = array();
 		while($row = $result->fetch_assoc()){
-			$last_name = $row["last_name"];
-			$street_no = $row["street_no"];
-			$street_name = $row["street_name"];
-			$apt_no = $row["apt_no"];
-			$sql_count .= "sum(last_name = '$last_name' AND street_no = '$street_no' AND street_name = '$street_name' AND apt_no = '$apt_no') as count" . $count . ", ";
-			if(fmod($count, 1000) == 0){
-				$sql_count = rtrim($sql_count,", ");
-				$sql_count .= " FROM $table_name";
-				array_push($array_counts, $sql_count);
-				$sql_count = "SELECT ";
+			$unique_family_string = "";
+			$unique_family_string .= $row["last_name"] . "_";
+			$unique_family_string .= $row["street_no"] . "_";
+			$unique_family_string .= $row["street_name"] . "_";
+			$unique_family_string .= $row["apt_no"];
+			if(in_array($unique_family_string, $array_unique_family)){
+				$index = array_search($unique_family_string, $array_unique_family);
+				$array_unique_family_counts[$index] = $array_unique_family_counts[$index] + 1;
 			}
-			$count++;
+			else{
+				array_push($array_unique_family, $unique_family_string);
+				array_push($array_unique_family_counts, 1);
+			}
 		}
-		$sql_count = rtrim($sql_count,", ");
-		$sql_count .= " FROM $table_name";
-		array_push($array_counts, $sql_count);
-		//echo $sql_count;
-	}
-	$result = mysqli_query($conn, $query);
-	fputcsv($file, $headers);
-	if(isset($_POST["household"])){
-		$result_counts = mysqli_query($conn, $array_counts[0]);
-		$row_counts = $result_counts->fetch_assoc();
-		$count = 1;
-		$array_index = 1;
+		$query .= " GROUP BY last_name, street_no, street_name, apt_no";
+		$query = str_replace("ORDER BY last_name, street_no, street_name, apt_no GROUP BY last_name, street_no, street_name, apt_no", "GROUP BY last_name, street_no, street_name, apt_no ORDER BY last_name, street_no, street_name, apt_no", $query);
+		$result = mysqli_query($conn, $query);
+		fputcsv($file, $headers);
+		$counts_index = 0;
 		while($row = $result->fetch_assoc()){
-			if($row_counts["count" . $count] > 1){
+			if($array_unique_family_counts[$counts_index] > 1){
+				$row["voter_id"] = "";
 				$row["last_name"] = "The " . $row["last_name"] . " Family";
 				$row["first_name"] = "";
 				$row["middle_name"] = "";
@@ -63,19 +57,17 @@
 			else{
 				fputcsv($file, $row);
 			}
-			if(fmod($count, 1000) == 0){
-				$result_counts = mysqli_query($conn, $array_counts[$array_index]);
-				$row_counts = $result_counts->fetch_assoc();
-				$array_index++;
-			}
-			$count++;
+			$counts_index++;
 		}
 	}
 	else{
+		$result = mysqli_query($conn, $query);
+		fputcsv($file, $headers);
 		while($row = $result->fetch_assoc()){
 			fputcsv($file, $row);
 		}
 	}
+	//die("stop");
 	fseek($file, 0);
 	header('Content-Type: application/csv');
     header('Content-Disposition: attachment; filename="query.csv";');
