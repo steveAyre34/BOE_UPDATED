@@ -314,6 +314,9 @@
 $('#submit_query input').on("change", function(){
     $("#export").hide(1000);
 });
+$('#submit_query select').on("change", function(){
+    $("#export").hide(1000);
+});
 $("#standardcols").on("change", function(){
 	$('#standardcols').prop('checked', true);
 });
