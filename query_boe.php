@@ -24,22 +24,24 @@
 
 	if(isset($_POST["household"])){
 		$result = mysqli_query($conn, $query);
-		$array_unique_family = array();
 		$array_unique_family_counts = array();
+		$last_string = "";
+		$value = 1;
+		$index = -1;
 		while($row = $result->fetch_assoc()){
 			$unique_family_string = "";
 			$unique_family_string .= $row["last_name"] . "_";
 			$unique_family_string .= $row["street_no"] . "_";
 			$unique_family_string .= $row["street_name"] . "_";
 			$unique_family_string .= $row["apt_no"];
-			if(in_array($unique_family_string, $array_unique_family)){
-				$index = array_search($unique_family_string, $array_unique_family);
+			if($unique_family_string == $last_string){
 				$array_unique_family_counts[$index] = $array_unique_family_counts[$index] + 1;
 			}
 			else{
-				array_push($array_unique_family, $unique_family_string);
 				array_push($array_unique_family_counts, 1);
+				$index = $index + 1;
 			}
+			$last_string = $unique_family_string;
 		}
 		$query .= " GROUP BY last_name, street_no, street_name, apt_no";
 		$query = str_replace("ORDER BY last_name, street_no, street_name, apt_no GROUP BY last_name, street_no, street_name, apt_no", "GROUP BY last_name, street_no, street_name, apt_no ORDER BY last_name, street_no, street_name, apt_no", $query);
