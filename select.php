@@ -304,9 +304,9 @@
 <div style = "margin-bottom: 20%">
 </div>
 <div style = "position: fixed; bottom: 0; width: 100%;">
-<input id = "export" value = "Export" onclick = "submitForm()" type="submit" class="button" style="display: none; width: 500px; height: 100px;font-size:30px;background-color:#00C957;"/>
-<input value = "Count and Retrieve Query" onclick = "generateCount()" type="submit" class="button" style="width: 500px; height: 100px;font-size:30px;background-color:#00C957;"/>
-<input id = "count" placeholder = "Generated Count" onclick = "generateCount()" class="button" style="width: 500px; height: 100px;font-size:30px;" readonly>
+<input id = "export" value = "Export" onclick = "submitForm()" type="submit" class="button" style="display: none; width: 500px; height: 100px;font-size:30px;background-color:#2572ed; color: #FFFFFF"/>
+<input value = "Count and Retrieve Query" onclick = "generateCount()" type="submit" class="button" style="width: 500px; height: 100px;font-size:30px;background-color:#2572ed; color: #FFFFFF"/>
+<input id = "count" placeholder = "Generated Count" onclick = "generateCount()" class="button" style="width: 500px; height: 100px;font-size:30px;" readonly><img id = "loader" style = "display: none" width = "100" height = "100" src = "loader.gif">
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -369,7 +369,8 @@ function submitForm(){
 	$("#submit_query").submit();
 }
 function generateCount(){
-	$("#export").show(1000);
+	$("#count").val("");
+	$("#loader").show();
 	var data = ["household", [],  0, 0, "both", "", [], "all", ["DN"], "", [], [], [], [], [], [], [], [], [], [], [], [], [], [], []];
 	//check if individual or household
 	if($("#individual").is(":checked")){
@@ -574,6 +575,8 @@ function generateCount(){
 		success: function (data){
 			$("#count").val(data[0]);
 			$("#query").val(data[1]);
+			$("#loader").hide();
+			$("#export").show(1000);
 		}
 	});
 }
