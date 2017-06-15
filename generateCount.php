@@ -40,7 +40,7 @@
 		$sql_query .= "SELECT count($table_name.voter_id) as this_count FROM $table_name, $table_name_verified WHERE $table_name.voter_id = $table_name_verified.voter_id";
 	}
 	else{
-		$sql_query .= "SELECT count(DISTINCT $table_name.last_name, $table_name_verified.address_1) as this_count FROM $table_name, $table_name_verified WHERE $table_name.voter_id = $table_name_verified.voter_id";
+		$sql_query .= "SELECT count(DISTINCT $table_name.last_name, $table_name_verified.address1) as this_count FROM $table_name, $table_name_verified WHERE $table_name.voter_id = $table_name_verified.voter_id";
 	}
 	//add zipcodes to statement
 	$count = 1;
@@ -531,7 +531,7 @@
 		}
 	}
 	//die($sql_query);
-	$sql_query .= " ORDER BY $table_name.last_name, $table_name_verified.address_1";
+	$sql_query .= " ORDER BY $table_name.last_name, $table_name_verified.address1";
 	$result = mysqli_query($conn, $sql_query) or die("error");
 	$row = $result->fetch_assoc();
 	$count = $row["this_count"];

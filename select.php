@@ -300,6 +300,7 @@
 	</div>
 </div>
 <input id = "query" style = "display: none" name = "query" value = "">
+<input id = "count_get" style = "display: none" name = "count_get" value = "">
 </form>
 <div style = "margin-bottom: 20%">
 </div>
@@ -574,6 +575,7 @@ function generateCount(){
 		dataType: "json", // Set the data type so jQuery can parse it for you
 		success: function (data){
 			$("#count").val(data[0]);
+			$("#count_get").val(data[0]);
 			$("#query").val(data[1]);
 			$("#loader").hide();
 			$("#export").show(1000);

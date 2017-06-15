@@ -7,7 +7,7 @@
 	$file = fopen("php://memory", "w");
 	$query = $_POST["query"];
 	$headers = array("Voter ID", "First Name", "Middle Name", "Last Name", "Address", "City", "State", "Zip", "Zip4");
-	$columns_selected = "$table_name.voter_id, $table_name.first_name, $table_name.middle_name, $table_name.last_name, $table_name_verified.address_1, $table_name_verified.city, $table_name_verified.state, $table_name_verified.zip, $table_name_verified.zip4";
+	$columns_selected = "$table_name.voter_id, $table_name.first_name, $table_name.middle_name, $table_name.last_name, $table_name_verified.address1, $table_name_verified.city, $table_name_verified.state, $table_name_verified.zip, $table_name_verified.zip4";
 	//check if additional columns were checked for export
 	if(isset($_POST["voter_status_col"])){
 		$columns_selected .= ", $table_name.voter_status";
@@ -22,7 +22,7 @@
 		array_push($headers, "Absentee");
 	}
 	$query = str_replace("count($table_name.voter_id) as this_count", $columns_selected, $query);
-	$query = str_replace("count(DISTINCT $table_name.last_name, $table_name_verified.address_1) as this_count", $columns_selected, $query);
+	$query = str_replace("count(DISTINCT $table_name.last_name, $table_name_verified.address1) as this_count", $columns_selected, $query);
 	if(isset($_POST["household"])){
 		$result = mysqli_query($conn, $query);
 		$array_unique_family_counts = array();
@@ -32,7 +32,7 @@
 		while($row = $result->fetch_assoc()){
 			$unique_family_string = "";
 			$unique_family_string .= $row["last_name"] . "_";
-			$unique_family_string .= $row["address_1"];
+			$unique_family_string .= $row["address1"];
 			if($unique_family_string == $last_string){
 				$array_unique_family_counts[$index] = $array_unique_family_counts[$index] + 1;
 			}
@@ -43,8 +43,8 @@
 			$last_string = $unique_family_string;
 		}
 		//die($query);
-		$query .= " GROUP BY $table_name.last_name, $table_name_verified.address_1";
-		$query = str_replace("ORDER BY $table_name.last_name, $table_name_verified.address_1 GROUP BY $table_name.last_name, $table_name_verified.address_1", "GROUP BY $table_name.last_name, $table_name_verified.address_1 ORDER BY $table_name.last_name, $table_name_verified.address_1", $query);
+		$query .= " GROUP BY $table_name.last_name, $table_name_verified.address1";
+		$query = str_replace("ORDER BY $table_name.last_name, $table_name_verified.address1 GROUP BY $table_name.last_name, $table_name_verified.address1", "GROUP BY $table_name.last_name, $table_name_verified.address1 ORDER BY $table_name.last_name, $table_name_verified.address1", $query);
 		$result = mysqli_query($conn, $query);
 		fputcsv($file, $headers);
 		$counts_index = 0;
@@ -69,9 +69,20 @@
 			fputcsv($file, $row);
 		}
 	}
+	$file_upload = $array_table_name[0] . "_";
+	if(isset($_POST["household"])){
+		$file_upload .= "householded_";
+	}
+	else{
+		$file_upload .= "individual_";
+	}
+	$count = $_POST["count_get"];
+	$file_upload .= $count;
 	//die("stop");
 	fseek($file, 0);
+	header("Content-type: text/x-csv");
+	header("Content-type: text/csv");
 	header('Content-Type: application/csv');
-    header('Content-Disposition: attachment; filename="query.csv";');
+    header('Content-Disposition: attachment; filename="' . $file_upload . '.txt";');
     fpassthru($file);
 ?>
