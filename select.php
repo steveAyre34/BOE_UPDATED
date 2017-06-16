@@ -24,8 +24,6 @@
 <table width="800" border="1" cellpadding="10">
 	<tr valign="bottom"><td class="dcheader" style = "width: 100%"><h2>Exported Table Headers</h2></td></tr>
 	<tr valign="bottom"><td class="dcheader"><input type="checkbox" name="standardcols" id="standardcols" checked="checked" title="Standard output" /></td><td><label>VoterID, Full Name, Address/City/State/ZIP</label></td></tr>
-	<tr valign="bottom"><td class="dcheader"><input type="checkbox" name="voter_status_col" id="voter_status_col"></td><td><label>Voter Status</label></td></tr>
-	<tr valign="bottom"><td class="dcheader"><input type="checkbox" name="reason_col" id="reason_col"></td><td><label>Reason</label></td></tr>
 	<tr valign="bottom"><td class="dcheader"><input type="checkbox" name="absentee_col" id="absentee_col"></td><td><label>Absentee</label></td></tr>
 	<tr valign="top" class="dcfieldname">
 		<td align="right">Run counts and reports for&nbsp;</td>
@@ -42,10 +40,28 @@
 		<option value="ignore">--ignore--</option>
 		<?php
 	//generate all zipcodes in the town or borough
-		$result_zipcodes = mysqli_query($conn, "SELECT DISTINCT zip FROM $table_name WHERE zip != '' ORDER BY zip ASC");
+		$result_zipcodes = mysqli_query($conn, "SELECT zip FROM $table_name WHERE zip != '' ORDER BY zip ASC");
+		$array_zips = array();
+		$array_zip_counts = array();
+		$last = "";
+		$index = -1;
 		while($row_zipcodes = $result_zipcodes->fetch_assoc()){
 			$zip = $row_zipcodes["zip"];
-			echo "<option value = '$zip'>$zip</option>";
+			if($zip == $last){
+				$array_zips_counts[$index] += 1;
+			}
+			else{
+				array_push($array_zips, $zip);
+				array_push($array_zips_counts, 1);
+				$index++;
+			}
+			$last = $zip;
+		}
+		
+		for($i = 0; $i < count($array_zips); $i++){
+			$zip = $array_zips[$i];
+			$count = $array_zips_counts[$i];
+			echo "<option value = '$zip'>$zip: Count= $count</option>";
 		}
 		?></select></td>
 	</tr>
@@ -55,6 +71,7 @@
 		<div style = "width: 50%;">
 			<label>Age</label><input type = "checkbox" name = "age" id = "age">
 			<span id = "range" style = "visibility: hidden"><label>Min</label><input id = "min_age" name = "min_age" style = "width: 20%" value = "21"><label>Max</label><input id = "max_age" name = "max_age" style = "width: 20%" value = "120"></span>
+			<span id = "suppression" style = "display: none"><label>Suppression</label><input type = "checkbox" id = "suppression_checked"><select id = "under_or_over"><option selected = "selected" value = "over">Over</option><option value = "under">Under</option></select><input id = "age_value" placeholder = "--Enter Age--"></span>
 		</div>
 		<div style = "width: 100%; margin-top: 5%">
 			<label>Sex</label><input type = "checkbox" name = "sex" id = "sex">
@@ -331,9 +348,29 @@ $("#individual").on("change", function(){
 $("#age").on("change", function(){
 	if($("#age").is(":checked")){
 		$("#range").css("visibility", "visible");
+		$("#suppression").show();
+		$("#under_or_over").hide();
+		$("#age_value").hide();
+		$("#suppression_checked").prop("checked", false);
 	}
 	else{
 		$("#range").css("visibility", "hidden");
+		$("#suppression").hide();
+	}
+});
+$("#suppression_checked").on("change", function(){
+	if($("#suppression_checked").is(":checked")){
+		$("#under_or_over").show();
+		$("#age_value").show();
+		$("#range").css("visibility", "hidden");
+		$("#min_age").val(0);
+		$("#max_age").val(0);
+	}
+	else{
+		$("#age_value").val(0);
+		$("#under_or_over").hide();
+		$("#age_value").hide();
+		$("#range").css("visibility", "visible");
 	}
 });
 $("#sex").on("change", function(){
@@ -373,7 +410,7 @@ function submitForm(){
 function generateCount(){
 	$("#count").val("");
 	$("#loader").show();
-	var data = ["household", [],  0, 0, "both", "", [], "all", ["DN"], "", [], [], [], [], [], [], [], [], [], [], [], [], [], [], []];
+	var data = ["household", [],  0, 0, "both", "", [], "all", ["DN"], "", [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], 0, "over"];
 	//check if individual or household
 	if($("#individual").is(":checked")){
 		data[0] = "individual";
@@ -386,10 +423,15 @@ function generateCount(){
 	
 	//check if age is checked off
 	if($("#age").is(":checked")){
-		data[2] = $("#min_age").val();
-		data[3] = $("#max_age").val();
+		if(!$("#suppression_checked").is(":checked")){
+			data[2] = $("#min_age").val();
+			data[3] = $("#max_age").val();
+		}
+		else{
+			data[25] = $("#age_value").val();
+			data[26] = $("#under_or_over").val();
+		}
 	}
-	
 	//check if sex is checked off
 	if($("#sex").is(":checked")){
 		data[4] = $("#sex_choice").val();

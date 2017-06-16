@@ -30,6 +30,8 @@
 	$user2 = $data[22];
 	$user3 = $data[23];
 	$user4 = $data[24];
+	$age_value = $data[25];
+	$under_or_over = $data[26]; 
 	
 	$used_election_info = FALSE;
 	
@@ -74,6 +76,18 @@
 		$min_age = $min_year . "-" . $today_month . "-" . $today_day;
 		$max_age = $max_year . "-" . $today_month . "-" . $today_day;
 		$sql_query .= " AND ($table_name.dob >= '$max_age' AND $table_name.dob <= '$min_age')";
+	}
+	else if($age_value != 0){
+		$age_year = date("Y") - $age_value;
+		$today_month = date("m");
+		$today_day = date("d");
+		$age_use = $age_year . "-" . $today_month . "-" . $today_day;
+		if($under_or_over == "over"){
+			$sql_query .= " AND ($table_name.dob <= '$age_use')";
+		}
+		else{
+			$sql_query .= " AND ($table_name.dob >= '$age_use')";
+		}
 	}
 	
 	//add sex to statement
