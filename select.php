@@ -6,8 +6,9 @@
 	$county = lcfirst($county);
 	//table to get data from
 	$table_name = $county . "_import";
+	$table_name_verified = $county . "_verified";
 	$_SESSION["table_name"] = $table_name;
-	$result = mysqli_query($conn, "SELECT create_time FROM INFORMATION_SCHEMA.TABLES WHERE table_name = '$table_name'") or die("error");
+	$result = mysqli_query($conn, "SELECT create_time FROM INFORMATION_SCHEMA.TABLES WHERE table_name = '$table_name_verified'") or die("error");
 	$row = $result->fetch_assoc();
 	$date_uploaded = $row["create_time"];
 ?>
