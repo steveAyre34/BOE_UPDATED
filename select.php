@@ -9,6 +9,17 @@
 	$table_name_verified = $county . "_verified";
 	$_SESSION["table_name"] = $table_name;
 	$result = mysqli_query($conn, "SELECT create_time FROM INFORMATION_SCHEMA.TABLES WHERE table_name = '$table_name_verified'") or die("error");
+	$county_uppercase = ucwords($county);
+	$result_codes = mysqli_query($conn, "SELECT * FROM codes WHERE county = '$county_uppercase'") or die("error in codes");
+	$array_codes = array();
+	while($row_codes = $result_codes->fetch_assoc()){
+			$category = $row_codes["category"];
+			$code = $row_codes["code"];
+			$description = $row_codes["description"];
+			$key = $category . "_" . $code;
+			$array_codes[$key] = $description;
+			//echo $key;
+	}
 	$row = $result->fetch_assoc();
 	$date_uploaded = $row["create_time"];
 ?>
@@ -134,7 +145,9 @@
 				$result = mysqli_query($conn, "SELECT DISTINCT town from $table_name WHERE town != '' ORDER BY town");
 				while($row = $result->fetch_assoc()){
 					$town = $row["town"];
-					echo "<option value = '$town'>$town</option>";
+					$key = "town_" . $town;
+					$description = $array_codes[$key];
+					echo "<option value = '$town'>$town: $description</option>";
 				}
 			?>
 		</select>
@@ -147,7 +160,9 @@
 				$result = mysqli_query($conn, "SELECT DISTINCT ward from $table_name WHERE ward != '' ORDER BY ward");
 				while($row = $result->fetch_assoc()){
 					$ward = $row["ward"];
-					echo "<option value = '$ward'>$ward</option>";
+					$key = "ward_" . $ward;
+					$description = $array_codes[$key];
+					echo "<option value = '$ward'>$ward: $description</option>";
 				}
 			?>
 		</select>
@@ -162,7 +177,9 @@
 				$result = mysqli_query($conn, "SELECT DISTINCT district from $table_name WHERE district != '' ORDER BY district");
 				while($row = $result->fetch_assoc()){
 					$district = $row["district"];
-					echo "<option value = '$district'>$district</option>";
+					$key = "district_" . $district;
+					$description = $array_codes[$key];
+					echo "<option value = '$district'>$district: $description</option>";
 				}
 			?>
 		</select>
@@ -175,7 +192,9 @@
 				$result = mysqli_query($conn, "SELECT DISTINCT cong_district from $table_name WHERE cong_district != '' ORDER BY cong_district");
 				while($row = $result->fetch_assoc()){
 					$cong_district = $row["cong_district"];
-					echo "<option value = '$cong_district'>$cong_district</option>";
+					$key = "cong_district_" . $cong_district;
+					$description = $array_codes[$key];
+					echo "<option value = '$cong_district'>$cong_district: $description</option>";
 				}
 			?>
 		</select>
@@ -188,7 +207,9 @@
 				$result = mysqli_query($conn, "SELECT DISTINCT sen_district from $table_name WHERE sen_district != '' ORDER BY sen_district");
 				while($row = $result->fetch_assoc()){
 					$sen_district = $row["sen_district"];
-					echo "<option value = '$sen_district'>$sen_district</option>";
+					$key = "sen_district_" . $sen_district;
+					$description = $array_codes[$key];
+					echo "<option value = '$sen_district'>$sen_district: $description</option>";
 				}
 			?>
 		</select>
@@ -203,7 +224,9 @@
 				$result = mysqli_query($conn, "SELECT DISTINCT school_district from $table_name WHERE school_district != '' ORDER BY school_district");
 				while($row = $result->fetch_assoc()){
 					$school_district = $row["school_district"];
-					echo "<option value = '$school_district'>$school_district</option>";
+					$key = "school_district_" . $school_district;
+					$description = $array_codes[$key];
+					echo "<option value = '$school_district'>$school_district: $description</option>";
 				}
 			?>
 		</select>
@@ -216,7 +239,9 @@
 				$result = mysqli_query($conn, "SELECT DISTINCT asm_district from $table_name WHERE asm_district != '' ORDER BY asm_district");
 				while($row = $result->fetch_assoc()){
 					$asm_district = $row["asm_district"];
-					echo "<option value = '$asm_district'>$asm_district</option>";
+					$key = "asm_district_" . $asm_district;
+					$description = $array_codes[$key];
+					echo "<option value = '$asm_district'>$asm_district: $description</option>";
 				}
 			?>
 		</select>
@@ -229,7 +254,9 @@
 				$result = mysqli_query($conn, "SELECT DISTINCT fire_district from $table_name WHERE fire_district != '' ORDER BY fire_district");
 				while($row = $result->fetch_assoc()){
 					$fire_district = $row["fire_district"];
-					echo "<option value = '$fire_district'>$fire_district</option>";
+					$key = "fire_district_" . $fire_district;
+					$description = $array_codes[$key];
+					echo "<option value = '$fire_district'>$fire_district: $description</option>";
 				}
 			?>
 		</select>
@@ -244,7 +271,9 @@
 				$result = mysqli_query($conn, "SELECT DISTINCT leg_district from $table_name WHERE leg_district != '' ORDER BY leg_district");
 				while($row = $result->fetch_assoc()){
 					$leg_district = $row["leg_district"];
-					echo "<option value = '$leg_district'>$leg_district</option>";
+					$key = "leg_district_" . $leg_district;
+					$description = $array_codes[$key];
+					echo "<option value = '$leg_district'>$leg_district: $description</option>";
 				}
 			?>
 		</select>
@@ -257,7 +286,9 @@
 				$result = mysqli_query($conn, "SELECT DISTINCT village from $table_name WHERE village != '' ORDER BY village");
 				while($row = $result->fetch_assoc()){
 					$village = $row["village"];
-					echo "<option value = '$village'>$village</option>";
+					$key = "village_" . $village;
+					$description = $array_codes[$key];
+					echo "<option value = '$village'>$village: $description</option>";
 				}
 			?>
 		</select>
@@ -270,7 +301,9 @@
 				$result = mysqli_query($conn, "SELECT DISTINCT user1 from $table_name WHERE user1 != '' ORDER BY user1");
 				while($row = $result->fetch_assoc()){
 					$user1 = $row["user1"];
-					echo "<option value = '$user1'>$user1</option>";
+					$key = "user1_" . $user1;
+					$description = $array_codes[$key];
+					echo "<option value = '$user1'>$user1: $description</option>";
 				}
 			?>
 		</select>
@@ -285,7 +318,9 @@
 				$result = mysqli_query($conn, "SELECT DISTINCT user2 from $table_name WHERE user2 != '' ORDER BY user2");
 				while($row = $result->fetch_assoc()){
 					$user2 = $row["user2"];
-					echo "<option value = '$user2'>$user2</option>";
+					$key = "user2_" . $user2;
+					$description = $array_codes[$key];
+					echo "<option value = '$user2'>$user2: $description</option>";
 				}
 			?>
 		</select>
@@ -298,7 +333,9 @@
 				$result = mysqli_query($conn, "SELECT DISTINCT user3 from $table_name WHERE user3 != '' ORDER BY user3");
 				while($row = $result->fetch_assoc()){
 					$user3 = $row["user3"];
-					echo "<option value = '$user3'>$user3</option>";
+					$key = "user3_" . $user3;
+					$description = $array_codes[$key];
+					echo "<option value = '$user3'>$user3: $description</option>";
 				}
 			?>
 		</select>
@@ -311,7 +348,9 @@
 				$result = mysqli_query($conn, "SELECT DISTINCT user4 from $table_name WHERE user4 != '' ORDER BY user4");
 				while($row = $result->fetch_assoc()){
 					$user4 = $row["user4"];
-					echo "<option value = '$user4'>$user4</option>";
+					$key = "user4_" . $user4;
+					$description = $array_codes[$key];
+					echo "<option value = '$user4'>$user4: $description</option>";
 				}
 			?>
 		</select>
