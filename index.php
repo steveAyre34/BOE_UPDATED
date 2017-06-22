@@ -4,6 +4,7 @@
 ?>
 <h1>Board of Elections Data Filter</h1>
 <br/>
+<a href = "search/search_index_choose_county.php">Search BOE</a>
 <form method="get" action="select.php">
 Select County:<br/>
 
