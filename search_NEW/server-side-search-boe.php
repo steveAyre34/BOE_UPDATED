@@ -5,19 +5,28 @@ Follow this tutorial for further clarification --> https://coderexample.com/data
 $sql = "";
 $totalData = "";
 $totalFiltered = "";
+//---QUERIED DATA--
 $county = $_GET["county"];
-$table = $county . "_verified";
+$first_name = $_GET["first_name"];
+$last_name = $_GET["last_name"];
+$street_no = $_GET["street_no"];
+$street_name = $_GET["street_name"];
+$apt_no = $_GET["apt_no"];
+$city = $_GET["city"];
+$zip = $_GET["zip"];
+$table_import = $county . "_import";
+$table_verified = $county . "_verified";
 if($_POST['function'] ==1){
 	// getting total number records without any search
 	require("connection.php");
 	global $sql, $totalData, $totalFiltered;
-	$sql = "SELECT voter_id, full_name, address1, crrt, dp3, city, state, zip, zip4 FROM $table";
+	$sql = "SELECT * FROM $table_import WHERE first_name LIKE '%{$first_name}%' AND last_name LIKE '%{$last_name}%' AND street_no LIKE '%{$street_no}%' AND street_name LIKE '%{$street_name}%' AND apt_no LIKE '%{$apt_no}%' AND city LIKE '%{$city}%' AND zip LIKE '%{$zip}%'";
 	$query=mysqli_query($conn, $sql);
 	$totalData = mysqli_num_rows($query);
 	$totalFiltered = $totalData;  // when there is no search parameter then total number rows = total number filtered rows.
 
 
-	$sql = "SELECT voter_id, full_name, address1, crrt, dp3, city, state, zip, zip4 FROM $table WHERE 1=1";
+	$sql = "SELECT * FROM $table_import WHERE 1=1 AND first_name LIKE '%{$first_name}%' AND last_name LIKE '%{$last_name}%' AND street_no LIKE '%{$street_no}%' AND street_name LIKE '%{$street_name}%' AND apt_no LIKE '%{$apt_no}%' AND city LIKE '%{$city}%' AND zip LIKE '%{$zip}%'";
 }
 
 
@@ -27,26 +36,22 @@ $requestData= $_REQUEST;
 $columns = array(
 // datatable column index  => database column name
 	0 => 'voter_id',
-	1=> 'full_name',
-	2=> 'address1',
-	3 =>'crrt',
-	4 => 'dp3',
-	5=> 'city',
-	6=> 'state',
-	7=> 'zip',
-	8=> 'zip4',
+	1=> 'first_name',
+	2=> 'last_name',
+	3 =>'city',
+	4 => 'party',
 );
 
 	if( !empty($requestData['search']['value']) ) {   // if there is a search parameter, $requestData['search']['value'] contains search parameter
 		$sql.=" AND (voter_id LIKE '%".$requestData['search']['value']."%' ";
-		$sql.=" OR full_name LIKE '%".$requestData['search']['value']."%' ";
-		$sql.=" OR address1 LIKE '%".$requestData['search']['value']."%' ";
-		$sql.=" OR crrt LIKE '%".$requestData['search']['value']."%' ";
-		$sql.=" OR dp3 LIKE '%".$requestData['search']['value']."%' ";
+		$sql.=" OR first_name LIKE '%".$requestData['search']['value']."%' ";
+		$sql.=" OR last_name LIKE '%".$requestData['search']['value']."%' ";
 		$sql.=" OR city LIKE '%".$requestData['search']['value']."%' ";
 		$sql.=" OR state LIKE '%".$requestData['search']['value']."%' ";
 		$sql.=" OR zip LIKE '%".$requestData['search']['value']."%' ";
 		$sql.=" OR zip4 LIKE '%".$requestData['search']['value']."%' ";
+		$sql.=" OR party LIKE '%".$requestData['search']['value']."%' ";
+		$sql.=" OR street_name LIKE '%".$requestData['search']['value']."%' ";
 	}
 	//getting records as per search parameters
 	for ($i = 0; $i < count($columns); $i++) {
@@ -69,14 +74,10 @@ $columns = array(
 	while( $row=mysqli_fetch_array($query) ) {  // preparing an array
 		$nestedData=array();
 		$nestedData[] = $row["voter_id"];
-		$nestedData[] = $row["full_name"];
-		$nestedData[] = $row["address1"];
-		$nestedData[] = $row["crrt"];
-		$nestedData[] = $row["dp3"];
-		$nestedData[] = $row["city"];
-		$nestedData[] = $row["state"];
-		$nestedData[] = $row["zip"];
-		$nestedData[] = $row["zip4"];
+		$nestedData[] = $row["first_name"];
+		$nestedData[] = $row["last_name"];
+		$nestedData[] = $row["street_no"] . " " . $row["street_name"] . ", " . $row["city"] . ", " . $row["state"] . ", " . $row["zip"];
+		$nestedData[] = $row["party"];
 		
 		$data[] = $nestedData;
 	}

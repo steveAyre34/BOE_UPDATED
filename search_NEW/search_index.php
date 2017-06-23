@@ -1,5 +1,12 @@
 <?php
 	require("connection.php");
+	$first_name = $_POST["first_name"];
+	$last_name = $_POST["last_name"];
+	$street_no = $_POST["street_no"];
+	$street_name = $_POST["street_name"];
+	$apt_no = $_POST["apt_no"];
+	$city = $_POST["city"];
+	$zip = $_POST["zip"];
 	$county = $_POST["county"];
 ?>
 <html>
@@ -11,18 +18,14 @@
 <body>
 	<h1>Search BOE Data</h1>
 	<div style = "padding-bottom: 20px"></div>
-	<table id="crm-table"  cellpadding="0" cellspacing="0" border="0" class="display" width="92%">
+	<table id="crm-table"  cellpadding="0" cellspacing="0" border="0" class="display" width="100%">
 			<thead>
 				<tr>
 				<th>Voter ID</th>
-				<th>Full Name</th>
-				<th>Mailing Address</th>
-				<th>CRRT</th>
-				<th>DP3</th>
-				<th>City</th>
-				<th>State</th>
-				<th>Zip</th>
-				<th>Zip4</th>	
+				<th>First Name</th>
+				<th>Last Name</th>
+				<th>Residence</th>
+				<th>Party</th>
 				</tr>
 			</thead>
 			<tfoot>
@@ -32,10 +35,6 @@
 				<td><input type="text" text = "address1" data-column="2"  placeholder = "Search Mailing Address" class="search-input-text search_col search_box61" style = "visibility: hidden"><button style = 'display: none' class = 'minus_button61' onclick = "minusSearchCounter('.search_box61', '.add_button61', '.minus_button61')">Clear Mail Address</button><button class = "add_button61" onclick = "addSearchCounter('.search_box61', '.add_button61', '.minus_button61')">Search by Mail Address</button></td>
 				<td><input type="text" text = "crrt" data-column="3"  placeholder = "Search CRRT" class="search-input-text search_col search_box62" style = "visibility: hidden"><button style = 'display: none' class = 'minus_button62' onclick = "minusSearchCounter('.search_box62', '.add_button62', '.minus_button62')">Clear CRRT</button><button class = "add_button62" onclick = "addSearchCounter('.search_box62', '.add_button62', '.minus_button62')">Search by CRRT</button></td>
 				<td><input type="text" text = "dp3" data-column="4"  placeholder = "Search DP3" class="search-input-text search_col search_box63" style = "visibility: hidden"><button style = 'display: none' class = 'minus_button63' onclick = "minusSearchCounter('.search_box63', '.add_button63', '.minus_button63')">Clear DP3</button><button class = "add_button63" onclick = "addSearchCounter('.search_box63', '.add_button63', '.minus_button63')">Search by DP3</button></td>
-  				<td><input type="text" text = "city" data-column="5"  placeholder = "Search City" class="search-input-text search_col search_box2" style = "visibility: hidden"><button style = 'display: none' class = 'minus_button2' onclick = "minusSearchCounter('.search_box2', '.add_button2', '.minus_button2')">Clear City</button><button class = "add_button2" onclick = "addSearchCounter('.search_box2', '.add_button2', '.minus_button2')">Search by City</button></td>
-  				<td><input type="text" text = "state" data-column="6"  placeholder = "Search State" class="search-input-text search_col search_box3" style = "visibility: hidden"><button style = 'display: none' class = 'minus_button3' onclick = "minusSearchCounter('.search_box3', '.add_button3', '.minus_button3')">Clear State</button><button class = "add_button3" onclick = "addSearchCounter('.search_box3', '.add_button3', '.minus_button3')">Search by State</button></td>
-  				<td><input type="text" text = "zip" data-column="7"  placeholder = "Search Zip" class="search-input-text search_col search_box4" style = "visibility: hidden"><button style = 'display: none' class = 'minus_button4' onclick = "minusSearchCounter('.search_box4', '.add_button4', '.minus_button4')">Clear Zip</button><button class = "add_button4" onclick = "addSearchCounter('.search_box4', '.add_button4', '.minus_button4')">Search by Zip</button></td>
-  				<td><input type="text" text = "zip4" data-column="8"  placeholder = "Search Zip4" class="search-input-text search_col search_box5" style = "visibility: hidden"><button style = 'display: none' class = 'minus_button5' onclick = "minusSearchCounter('.search_box5', '.add_button5', '.minus_button5')">Clear Zip4</button><button class = "add_button5" onclick = "addSearchCounter('.search_box5', '.add_button5', '.minus_button5')">Search by Zip4</button></td>
   				
   			</tr>
 		</tfoot>
@@ -52,6 +51,13 @@
     var myData = {function: 1};
     var FilteredRecords = 0;
 	var county = <?php echo json_encode($county); ?>;
+	var first_name = <?php echo json_encode($first_name); ?>;
+	var last_name = <?php echo json_encode($last_name); ?>;
+	var street_no = <?php echo json_encode($street_no); ?>;
+	var street_name = <?php echo json_encode($street_name); ?>;
+	var apt_no = <?php echo json_encode($apt_no); ?>;
+	var city = <?php echo json_encode($city); ?>;
+	var zip = <?php echo json_encode($zip); ?>;
 	$(document).ready(function() {
     //on page load set the 'mark' column in database to 0
     
@@ -65,7 +71,7 @@
         "deferRender": false,
   			"scrollX": true,
   			"ajax":{
-  				url :"server-side-search-boe.php?county=" + county, // json datasource
+  				url :"server-side-search-boe.php?county=" + county + "&first_name=" + first_name + "&last_name=" + last_name + "&street_no=" + street_no + "&street_name=" + street_name + "&apt_no=" + apt_no + "&city=" + city + "&zip=" + zip, // json datasource
   				type: "POST",  // method  , by default get
           data: function ( d ) {
                    return  $.extend(d, myData);

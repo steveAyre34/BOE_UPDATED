@@ -1,8 +1,25 @@
 <?php
 	require("connection.php");
 ?>
+<head>
+<title>BOE Search</title>
+		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.2.2/css/buttons.dataTables.min.css">
+		<link rel="stylesheet" type="text/css" href="jquery.dataTables.css">
+</title>
+</head>
 <h1>Choose County</h1>
-<form method = "post" action = "search_index.php">
+<form action = "search_index.php" method = "POST">
+<div class='allcontacts-table'><table border='0' cellspacing='0' cellpadding='0' class='table-bordered allcontacts-table' >
+<tbody>
+<tr valign='top'><td colspan='2'><table id = 'w_m_table' border='0' cellspacing='0' cellpadding='0' class='table-striped main-table contacts-list'><tbody>
+<tr><td><label>First Name</label></td><td><input name = "first_name"></td></tr>
+<tr><td><label>Last Name</label></td><td><input name = "last_name"></td></tr>
+<tr><td><label>Street No.</label></td><td><input name = "street_no"></td></tr>
+<tr><td><label>Street Name</label></td><td><input name = "street_name"></td></tr>
+<tr><td><label>Apt. No.(if necessary)</label></td><td><input name = "apt_no"></td></tr>
+<tr><td><label>City</label></td><td><input name = "city"></td></tr>
+<tr><td><label>Zip</label></td><td><input name = "zip"></td></tr>
+</tbody></table></td></tr></tbody></table></div>
 	<select name = "county">
 		<?php
 			$count = 1;
@@ -27,5 +44,5 @@
 			}
 		?>
 	</select>
-	<input type = "submit" value = "Go">
+	<input type = "submit" value = "Go" onclick = "test()">
 </form>
