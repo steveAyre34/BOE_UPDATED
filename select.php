@@ -23,6 +23,17 @@
 	$row = $result->fetch_assoc();
 	$date_uploaded = $row["create_time"];
 ?>
+<style>
+.dropdown{
+	width: 20%;
+	background: #2b6287;
+	color: #FFFFFF;
+	text-align: center;
+	border-radius: 35px;
+	font-size: 25px;
+	cursor: pointer;
+}
+</style>
 <form method="post" action="query_boe.php" id = "submit_query">
 <table width="800" border="0" cellpadding="6" cellspacing="2">
 	<tr valign="bottom">
@@ -32,7 +43,8 @@
 <hr size="1">
 <!--All inputs for export go here-->
 <!--Choosing the table headers for the exported file-->
-<table width="800" border="1" cellpadding="10">
+<div class = "dropdown" onclick = "showExport()">Exported Table Headers<img src = "dropdown_arrow.png" width = "30" height = "30"></div>
+<table id = "export_table" width="800" border="1" cellpadding="10" style = "display: none">
 	<tr valign="bottom"><td class="dcheader" style = "width: 100%"><h2>Exported Table Headers</h2></td></tr>
 	<tr valign="bottom"><td class="dcheader"><input type="checkbox" name="standardcols" id="standardcols" checked="checked" title="Standard output" /></td><td><label>VoterID, Full Name, Address/City/State/ZIP</label></td></tr>
 	<tr valign="bottom"><td class="dcheader"><input type="checkbox" name="absentee_col" id="absentee_col"></td><td><label>Absentee</label></td></tr>
@@ -369,6 +381,14 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
+function showExport(){
+	if($("#export_table").css("display") == 'none'){
+		$("#export_table").show(1000);
+	}
+	else{
+		$("#export_table").hide(1000);
+	}
+}
 $('#submit_query input').on("change", function(){
     $("#export").hide(1000);
 });
