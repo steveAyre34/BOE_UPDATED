@@ -25,19 +25,10 @@
 				<th>First Name</th>
 				<th>Last Name</th>
 				<th>Residence</th>
+				<th>Mailing Address</th>
 				<th>Party</th>
 				</tr>
 			</thead>
-			<tfoot>
-        <tr>
-				<td><input type="text" text = "voter_id" data-column="0"  placeholder = "Search Voter ID" class="search-input-text search_col search_box6" style = "visibility: hidden"><button style = 'display: none' class = 'minus_button6' onclick = "minusSearchCounter('.search_box6', '.add_button6', '.minus_button6')">Clear Voter ID</button><button class = "add_button6" onclick = "addSearchCounter('.search_box6', '.add_button6', '.minus_button6')">Search by Voter ID</button></td>
-  				<td><input type="text" text = "full_name" data-column="1"  placeholder = "Search Name" class="search-input-text search_col search_box1" style = "visibility: hidden"><button style = 'display: none' class = 'minus_button1' onclick = "minusSearchCounter('.search_box1', '.add_button1', '.minus_button1')">Clear Full Name</button><button class = "add_button1" onclick = "addSearchCounter('.search_box1', '.add_button1', '.minus_button1')">Search by Full Name</button></td>
-				<td><input type="text" text = "address1" data-column="2"  placeholder = "Search Mailing Address" class="search-input-text search_col search_box61" style = "visibility: hidden"><button style = 'display: none' class = 'minus_button61' onclick = "minusSearchCounter('.search_box61', '.add_button61', '.minus_button61')">Clear Mail Address</button><button class = "add_button61" onclick = "addSearchCounter('.search_box61', '.add_button61', '.minus_button61')">Search by Mail Address</button></td>
-				<td><input type="text" text = "crrt" data-column="3"  placeholder = "Search CRRT" class="search-input-text search_col search_box62" style = "visibility: hidden"><button style = 'display: none' class = 'minus_button62' onclick = "minusSearchCounter('.search_box62', '.add_button62', '.minus_button62')">Clear CRRT</button><button class = "add_button62" onclick = "addSearchCounter('.search_box62', '.add_button62', '.minus_button62')">Search by CRRT</button></td>
-				<td><input type="text" text = "dp3" data-column="4"  placeholder = "Search DP3" class="search-input-text search_col search_box63" style = "visibility: hidden"><button style = 'display: none' class = 'minus_button63' onclick = "minusSearchCounter('.search_box63', '.add_button63', '.minus_button63')">Clear DP3</button><button class = "add_button63" onclick = "addSearchCounter('.search_box63', '.add_button63', '.minus_button63')">Search by DP3</button></td>
-  				
-  			</tr>
-		</tfoot>
 		<tbody>
 		</tbody>
 	</table>
@@ -46,7 +37,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript" language="javascript" src="jquery.dataTables.js"></script>
 <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.12/js/dataTables.material.min.js"></script>
-<script type="text/javascript" language="javascript" >
+<script type="text/javascript" language="javascript">
     var dataTable = null;
     var myData = {function: 1};
     var FilteredRecords = 0;

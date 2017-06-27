@@ -44,18 +44,19 @@
 <!--All inputs for export go here-->
 <!--Choosing the table headers for the exported file-->
 <div class = "dropdown" onclick = "showExport()">Exported Table Headers<img src = "dropdown_arrow.png" width = "30" height = "30"></div>
-<table id = "export_table" width="800" border="1" cellpadding="10" style = "display: none">
-	<tr valign="bottom"><td class="dcheader" style = "width: 100%"><h2>Exported Table Headers</h2></td></tr>
+<table id = "export_table" width="600" border="1" cellpadding="10" style = "display: none">
 	<tr valign="bottom"><td class="dcheader"><input type="checkbox" name="standardcols" id="standardcols" checked="checked" title="Standard output" /></td><td><label>VoterID, Full Name, Address/City/State/ZIP</label></td></tr>
 	<tr valign="bottom"><td class="dcheader"><input type="checkbox" name="absentee_col" id="absentee_col"></td><td><label>Absentee</label></td></tr>
 	<tr valign="top" class="dcfieldname">
-		<td align="right">Run counts and reports for&nbsp;</td>
-		<td><input type="radio" name="household" id="household" checked><label style = "margin-right: 25%">Households</label>
-			<input type="radio" name="individual" id="individual"><label>Individuals</label></td>
+		<!--<td><input type="radio" name="household" id="household" style = "float: left" checked><label style = "margin-right: 25%">Households</label></td>
+		<td><input type="radio" name="individual" id="individual"><label>Individuals</label></td>-->
 	</tr>
 </table>
 <div>
-	<div style = "display: inline-block; float: left; margin-right: 2%; width: 15%">
+<div style = "margin-bottom: 5px"></div>
+<div class = "dropdown" onclick = "showGeneral()">Zipcodes and General Info<img src = "dropdown_arrow.png" width = "30" height = "30"></div>
+<div id = "general_div" style = "display: none">
+	<div style = "float: left; margin-right: 2%; width: 15%">
 	<table border="1" cellpadding="2" cellspacing="2">
 	<tr valign="bottom">
 	<td class="dcheader" style = "width: 50%"><select id = "zipcodes" name="zipcodes" style = "width: 100%; height: 300px" multiple>
@@ -90,7 +91,7 @@
 	</tr>
 	</table>
 	</div>
-	<div style = "float: left; width: 25%">
+	<div style = "float: left; width: 25%;">
 		<div style = "width: 50%;">
 			<label>Age</label><input type = "checkbox" name = "age" id = "age">
 			<span id = "range" style = "visibility: hidden"><label>Min</label><input id = "min_age" name = "min_age" style = "width: 20%" value = "21"><label>Max</label><input id = "max_age" name = "max_age" style = "width: 20%" value = "120"></span>
@@ -105,7 +106,10 @@
 			<input id = "reg_date_choice" name = "reg_date_choice" style = "visibility: hidden" type = "date">
 		</div>
 	</div>
-	<div style = "float: left; width: 30%">
+</div>
+	<div style = "margin-bottom: 5px"></div>
+	<div style = "clear: both" class = "dropdown" onclick = "showEH()">Election History<img src = "dropdown_arrow.png" width = "30" height = "30"></div>
+	<div id = "election_div" style = "float: left; width: 30%; display: none; clear: both">
 		<div style = "width: 15%;">
 			<label>All</label>
 			<input type = "checkbox" name = "all_elections" class = "elections" id = "all_elections" value = "all" checked>
@@ -135,6 +139,9 @@
 		</div>
 	</div>
 </div>
+<div style = "margin-bottom: 5px"></div>
+<div style = "clear: both" class = "dropdown" onclick = "showCodes()">Codes Filter<img src = "dropdown_arrow.png" width = "30" height = "30"></div>
+<div id = "codes_div" style = "display: none">
 <div style = "width: 100%;">
 	<div style = "width: 15%; padding-bottom: 1%; float: left; clear: both; margin-right: 2%">
 		<label><h4>Party</h4></label>
@@ -368,6 +375,12 @@
 		</select>
 	</div>
 </div>
+</div>
+<div style = "margin-bottom: 5px"></div>
+<div style = "clear: both">
+<input type="radio" name="household" id="household" style = "float: left; transform: scale(1.5)" checked><label style = "margin-right: 25%; float: left; font-size: 20px">Households</label>
+<input type="radio" name="individual" id="individual" style = "float: left; transform: scale(1.5)"><label style = "float: left; font-size: 20px">Individuals</label>
+</div>
 <input id = "query" style = "display: none" name = "query" value = "">
 <input id = "count_get" style = "display: none" name = "count_get" value = "">
 </form>
@@ -387,6 +400,30 @@ function showExport(){
 	}
 	else{
 		$("#export_table").hide(1000);
+	}
+}
+function showGeneral(){
+	if($("#general_div").css("display") == 'none'){
+		$("#general_div").show(500);
+	}
+	else{
+		$("#general_div").hide(500);
+	}
+}
+function showEH(){
+	if($("#election_div").css("display") == 'none'){
+		$("#election_div").show(500);
+	}
+	else{
+		$("#election_div").hide(500);
+	}
+}
+function showCodes(){
+	if($("#codes_div").css("display") == 'none'){
+		$("#codes_div").show(500);
+	}
+	else{
+		$("#codes_div").hide(500);
 	}
 }
 $('#submit_query input').on("change", function(){
