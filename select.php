@@ -160,15 +160,34 @@
 		<label><h4>Town</h4></label>
 		<select id = "town" name = "town" style = "height: 200px; width: 100%;" multiple>
 		<option value = "ignore" selected = "selected">--ignore--</option>
-			<?php
-				$result = mysqli_query($conn, "SELECT DISTINCT town from $table_name WHERE town != '' ORDER BY town");
-				while($row = $result->fetch_assoc()){
-					$town = $row["town"];
-					$key = "town_" . $town;
-					$description = $array_codes[$key];
-					echo "<option value = '$town'>$town: $description</option>";
-				}
-			?>
+		<?php
+		$result_towns = mysqli_query($conn, "SELECT town FROM $table_name WHERE town != '' ORDER BY town ASC");
+		$array_towns = array();
+		$array_town_counts = array();
+		$last = "";
+		$index = -1;
+		while($row_town = $result_towns->fetch_assoc()){
+			$town = $row_town["town"];
+			if($town == $last){
+				$array_town_counts[$index] += 1;
+			}
+			else{
+				array_push($array_towns, $town);
+				array_push($array_town_counts, 1);
+				$index++;
+			}
+			$last = $town;
+		}
+		
+		for($i = 0; $i < count($array_towns); $i++){
+			$town = $array_towns[$i];
+			$count = $array_town_counts[$i];
+			$result_code = mysqli_query($conn, "SELECT description FROM codes WHERE county = '$county' AND code = '$town' AND category = 'town'");
+			$row_code = $result_code->fetch_assoc();
+			$description = $row_code["description"];
+			echo "<option value = '$town'>$town($description): $count</option>";
+		}
+		?>
 		</select>
 	</div>
 	<div style = "width: 15%; float: left; margin-right: 2%">
