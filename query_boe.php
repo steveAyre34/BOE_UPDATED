@@ -6,7 +6,7 @@
 	require("connection.php");
 	$file = fopen("php://memory", "w");
 	$query = $_POST["query"];
-	$headers = array("Voter ID", "First Name", "Middle Name", "Last Name", "Party", "Voter Status", "Reason", "Address", "City", "State", "Zip", "Zip4");
+	$headers = array("Voter ID", "First Name", "Middle Name", "Last Name", "Party", "Voter Status", "Reason", "Mailing Address", "Mailing City", "Mailing State", "Zip", "Zip4");
 	$columns_selected = "$table_name.voter_id, $table_name.first_name, $table_name.middle_name, $table_name.last_name, $table_name.party, $table_name.voter_status, $table_name.reason, $table_name_verified.address1, $table_name_verified.city, $table_name_verified.state, $table_name_verified.zip, $table_name_verified.zip4";
 	//check if additional columns were checked for export
 	if(isset($_POST["voter_status_col"])){
