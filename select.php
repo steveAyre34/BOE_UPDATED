@@ -10,7 +10,7 @@
 	$_SESSION["table_name"] = $table_name;
 	$result = mysqli_query($conn, "SELECT create_time FROM INFORMATION_SCHEMA.TABLES WHERE table_name = '$table_name_verified'") or die("error");
 	$county_uppercase = ucwords($county);
-	$result_codes = mysqli_query($conn, "SELECT * FROM codes WHERE county = '$county_uppercase'") or die("error in codes");
+	$result_codes = mysqli_query($conn, "SELECT * FROM codes WHERE county = '$county_uppercase' OR county = 'All'") or die("error in codes");
 	$array_codes = array();
 	while($row_codes = $result_codes->fetch_assoc()){
 			$category = $row_codes["category"];
@@ -151,7 +151,9 @@
 				$result = mysqli_query($conn, "SELECT DISTINCT party from $table_name WHERE party != '' ORDER BY party");
 				while($row = $result->fetch_assoc()){
 					$party = $row["party"];
-					echo "<option value = '$party'>$party</option>";
+					$key = "party_" . $party;
+					$description = $array_codes[$key];
+					echo "<option value = '$party'>$party: $description</option>";
 				}
 			?>
 		</select>
