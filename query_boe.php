@@ -6,8 +6,8 @@
 	require("connection.php");
 	$file = fopen("php://memory", "w");
 	$query = $_POST["query"];
-	$headers = array("Voter ID", "First Name", "Middle Name", "Last Name", "Party", "Voter Status", "Reason", "Mailing Address", "Mailing City", "Mailing State", "Zip", "Zip4");
-	$columns_selected = "$table_name.voter_id, $table_name.first_name, $table_name.middle_name, $table_name.last_name, $table_name.party, $table_name.voter_status, $table_name.reason, $table_name_verified.address1, $table_name_verified.city, $table_name_verified.state, $table_name_verified.zip, $table_name_verified.zip4";
+	$headers = array("Voter ID", "First Name", "Middle Name", "Last Name", "Party", "Voter Status", "Reason", "Mailing Address", "Mailing City", "Mailing State", "Zip", "Zip4", "CRRT", "dp3", "Voting History1", "Voting History2", "Voting History3", "Voting History4", "Voting History5");
+	$columns_selected = "$table_name.voter_id, $table_name.first_name, $table_name.middle_name, $table_name.last_name, $table_name.party, $table_name.voter_status, $table_name.reason,  $table_name_verified.address1, $table_name_verified.city, $table_name_verified.state, $table_name_verified.zip, $table_name_verified.zip4, $table_name_verified.crrt, $table_name_verified.dp3, $table_name.history1, $table_name.history2, $table_name.history3, $table_name.history4, $table_name.history5";
 	//check if additional columns were checked for export
 	if(isset($_POST["voter_status_col"])){
 		$columns_selected .= ", $table_name.voter_status";
@@ -29,6 +29,11 @@
 		$array_unique_parties = array();
 		$array_unique_statuses = array();
 		$array_unique_reasons = array();
+		$array_unique_history1 = array();
+		$array_unique_history2 = array();
+		$array_unique_history3 = array();
+		$array_unique_history4 = array();
+		$array_unique_history5 = array();
 		$last_string = "";
 		$value = 1;
 		$index = -1;
@@ -41,12 +46,22 @@
 				$array_unique_statuses[$index] .= ", " . $row["voter_status"];
 				$array_unique_reasons[$index] .= ", " . $row["reason"];
 				$array_unique_parties[$index] .= ", " . $row["party"];
+				$array_unique_history1[$index] .= ", " . $row["history1"];
+				$array_unique_history2[$index] .= ", " . $row["history2"];
+				$array_unique_history3[$index] .= ", " . $row["history3"];
+				$array_unique_history4[$index] .= ", " . $row["history4"];
+				$array_unique_history5[$index] .= ", " . $row["history5"];
 			}
 			else{
 				array_push($array_unique_family_counts, 1);
 				array_push($array_unique_parties, $row["party"]);
 				array_push($array_unique_statuses, $row["voter_status"]);
 				array_push($array_unique_reasons, $row["reason"]);
+				array_push($array_unique_history1, $row["history1"]);
+				array_push($array_unique_history2, $row["history2"]);
+				array_push($array_unique_history3, $row["history3"]);
+				array_push($array_unique_history4, $row["history4"]);
+				array_push($array_unique_history5, $row["history5"]);
 				$index = $index + 1;
 			}
 			$last_string = $unique_family_string;
@@ -66,6 +81,11 @@
 				$row["party"] = $array_unique_parties[$counts_index];
 				$row["voter_status"] = $array_unique_statuses[$counts_index];
 				$row["reason"] = $array_unique_reasons[$counts_index];
+				$row["history1"] = $array_unique_history1[$counts_index];
+				$row["history2"] = $array_unique_history2[$counts_index];
+				$row["history3"] = $array_unique_history3[$counts_index];
+				$row["history4"] = $array_unique_history4[$counts_index];
+				$row["history5"] = $array_unique_history5[$counts_index];
 				fputcsv($file, $row);
 			}
 			else{
