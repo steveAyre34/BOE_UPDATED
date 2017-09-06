@@ -25,7 +25,6 @@
 				<th>First Name</th>
 				<th>Last Name</th>
 				<th>Residence</th>
-				<th>Mailing Address</th>
 				<th>Party</th>
 				</tr>
 			</thead>

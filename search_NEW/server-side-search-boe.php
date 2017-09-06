@@ -20,27 +20,27 @@ if($_POST['function'] ==1){
 	// getting total number records without any search
 	require("connection.php");
 	global $sql, $totalData, $totalFiltered;
-	if($county == "ulster"  || $county == "columbia" || $county == "dutchess" || $county == "albany"){
-		$sql = "SELECT $table_import.voter_id, $table_import.first_name, $table_import.last_name, $table_import.street_no, $table_import.street_name, $table_import.city as city1, $table_import.state as state1, $table_import.zip as zip1, $table_import.party, $table_verified.address1, $table_verified.city as city2, $table_verified.state as state2, $table_verified.zip as zip2 FROM $table_import INNER JOIN $table_verified ON $table_import.voter_id = $table_verified.voter_id WHERE $table_import.first_name LIKE '%{$first_name}%' AND $table_import.last_name LIKE '%{$last_name}%' AND $table_import.street_no LIKE '%{$street_no}%' AND $table_import.street_name LIKE '%{$street_name}%' AND $table_import.apt_no LIKE '%{$apt_no}%' AND $table_import.city LIKE '%{$city}%' AND $table_import.zip LIKE '%{$zip}%'";
+	if($county == "ulster"  || $county == "columbia" || $county == "dutchess" || $county == "albany" || $county == "schoharie"){
+		$sql = "SELECT voter_id, first_name, last_name, street_no, street_name, city as city1, state as state1, zip as zip1, party FROM $table_import WHERE first_name LIKE '%{$first_name}%' AND last_name LIKE '%{$last_name}%' AND street_no LIKE '%{$street_no}%' AND street_name LIKE '%{$street_name}%' AND apt_no LIKE '%{$apt_no}%' AND city LIKE '%{$city}%' AND zip LIKE '%{$zip}%'";
 	}
 	else if($county != "brooklyn" && $county != "queens" && $county != "statenisland" && $county != "bronx" && $county != "manhattan"){
-		$sql = "SELECT $table_import.voter_id, $table_import.first_name, $table_import.last_name, $table_import.street_no, $table_import.street_name, $table_import.city as city1, $table_import.state as state1, $table_import.zip as zip1, $table_import.party, $table_verified.address2, $table_verified.address4 FROM $table_import INNER JOIN $table_verified ON $table_import.voter_id = $table_verified.voterid WHERE $table_import.first_name LIKE '%{$first_name}%' AND $table_import.last_name LIKE '%{$last_name}%' AND $table_import.street_no LIKE '%{$street_no}%' AND $table_import.street_name LIKE '%{$street_name}%' AND $table_import.apt_no LIKE '%{$apt_no}%' AND $table_import.city LIKE '%{$city}%' AND $table_import.zip LIKE '%{$zip}%'";
+		$sql = "SELECT voter_id, first_name, last_name, street_no, street_name, city as city1, state as state1, zip as zip1, party FROM $table_import WHERE first_name LIKE '%{$first_name}%' AND last_name LIKE '%{$last_name}%' AND street_no LIKE '%{$street_no}%' AND street_name LIKE '%{$street_name}%' AND apt_no LIKE '%{$apt_no}%' AND city LIKE '%{$city}%' AND zip LIKE '%{$zip}%'";
 	}
 	else{
-		$sql = "SELECT $table_import.voter_id, $table_import.first_name, $table_import.last_name, $table_import.street_no, $table_import.street_name, $table_import.city as city1, $table_import.zip as zip1, $table_import.party, $table_verified.address2, $table_verified.address4 FROM $table_import INNER JOIN $table_verified ON $table_import.voter_id = $table_verified.voterid WHERE $table_import.first_name LIKE '%{$first_name}%' AND $table_import.last_name LIKE '%{$last_name}%' AND $table_import.street_no LIKE '%{$street_no}%' AND $table_import.street_name LIKE '%{$street_name}%' AND $table_import.apt_no LIKE '%{$apt_no}%' AND $table_import.city LIKE '%{$city}%' AND $table_import.zip LIKE '%{$zip}%'";
+		$sql = "SELECT voter_id, first_name, last_name, street_no, street_name, city as city1, zip as zip1, party FROM $table_import WHERE first_name LIKE '%{$first_name}%' AND last_name LIKE '%{$last_name}%' AND street_no LIKE '%{$street_no}%' AND street_name LIKE '%{$street_name}%' AND apt_no LIKE '%{$apt_no}%' AND city LIKE '%{$city}%' AND zip LIKE '%{$zip}%'";
 	}
 	$query=mysqli_query($conn, $sql);
 	$totalData = mysqli_num_rows($query);
 	$totalFiltered = $totalData;  // when there is no search parameter then total number rows = total number filtered rows.
 
-	if($county == "ulster"  || $county == "columbia" || $county == "dutchess" || $county == "albany"){
-		$sql = "SELECT $table_import.voter_id, $table_import.first_name, $table_import.last_name, $table_import.street_no, $table_import.street_name, $table_import.city as city1, $table_import.state as state1, $table_import.zip as zip1, $table_import.party, $table_verified.address1, $table_verified.city as city2, $table_verified.state as state2, $table_verified.zip as zip2 FROM $table_import INNER JOIN $table_verified ON $table_import.voter_id = $table_verified.voter_id WHERE 1=1 AND $table_import.first_name LIKE '%{$first_name}%' AND $table_import.last_name LIKE '%{$last_name}%' AND $table_import.street_no LIKE '%{$street_no}%' AND $table_import.street_name LIKE '%{$street_name}%' AND $table_import.apt_no LIKE '%{$apt_no}%' AND $table_import.city LIKE '%{$city}%' AND $table_import.zip LIKE '%{$zip}%'";
+	if($county == "ulster"  || $county == "columbia" || $county == "dutchess" || $county == "albany" || $county == "schoharie"){
+		$sql = "SELECT voter_id, first_name, last_name, street_no, street_name, city as city1, state as state1, zip as zip1, party FROM $table_import WHERE 1=1 AND first_name LIKE '%{$first_name}%' AND last_name LIKE '%{$last_name}%' AND street_no LIKE '%{$street_no}%' AND street_name LIKE '%{$street_name}%' AND apt_no LIKE '%{$apt_no}%' AND city LIKE '%{$city}%' AND zip LIKE '%{$zip}%'";
 	}
 	else if($county != "brooklyn" && $county != "queens" && $county != "statenisland" && $county != "bronx" && $county != "manhattan"){
-		$sql = "SELECT $table_import.voter_id, $table_import.first_name, $table_import.last_name, $table_import.street_no, $table_import.street_name, $table_import.city as city1, $table_import.state as state1, $table_import.zip as zip1, $table_import.party, $table_verified.address2, $table_verified.address4 FROM $table_import INNER JOIN $table_verified ON $table_import.voter_id = $table_verified.voterid WHERE 1=1 AND $table_import.first_name LIKE '%{$first_name}%' AND $table_import.last_name LIKE '%{$last_name}%' AND $table_import.street_no LIKE '%{$street_no}%' AND $table_import.street_name LIKE '%{$street_name}%' AND $table_import.apt_no LIKE '%{$apt_no}%' AND $table_import.city LIKE '%{$city}%' AND $table_import.zip LIKE '%{$zip}%'";
+		$sql = "SELECT voter_id, first_name, last_name, street_no, street_name, city as city1, state as state1, zip as zip1, party FROM $table_import WHERE 1=1 AND first_name LIKE '%{$first_name}%' AND last_name LIKE '%{$last_name}%' AND street_no LIKE '%{$street_no}%' AND street_name LIKE '%{$street_name}%' AND apt_no LIKE '%{$apt_no}%' AND city LIKE '%{$city}%' AND zip LIKE '%{$zip}%'";
 	}
 	else{
-		$sql = "SELECT $table_import.voter_id, $table_import.first_name, $table_import.last_name, $table_import.street_no, $table_import.street_name, $table_import.city as city1, $table_import.zip as zip1, $table_import.party, $table_verified.address2, $table_verified.address4 FROM $table_import INNER JOIN $table_verified ON $table_import.voter_id = $table_verified.voterid WHERE 1=1 AND $table_import.first_name LIKE '%{$first_name}%' AND $table_import.last_name LIKE '%{$last_name}%' AND $table_import.street_no LIKE '%{$street_no}%' AND $table_import.street_name LIKE '%{$street_name}%' AND $table_import.apt_no LIKE '%{$apt_no}%' AND $table_import.city LIKE '%{$city}%' AND $table_import.zip LIKE '%{$zip}%'";
+		$sql = "SELECT voter_id, first_name, last_name, street_no, street_name, city as city1, zip as zip1, party FROM $table_import WHERE 1=1 AND first_name LIKE '%{$first_name}%' AND last_name LIKE '%{$last_name}%' AND street_no LIKE '%{$street_no}%' AND street_name LIKE '%{$street_name}%' AND apt_no LIKE '%{$apt_no}%' AND city LIKE '%{$city}%' AND zip LIKE '%{$zip}%'";
 	}
 }
 
@@ -54,8 +54,7 @@ $columns = array(
 	1=> 'first_name',
 	2=> 'last_name',
 	3 =>'street_name',
-	4 => 'address1',
-	5 => 'party'
+	4 => 'party'
 );
 
 	if( !empty($requestData['search']['value']) ) {   // if there is a search parameter, $requestData['search']['value'] contains search parameter
@@ -83,14 +82,13 @@ $columns = array(
 	$query=mysqli_query($conn, $sql);
 	
 	$data = array();
-	if($county == "ulster"  || $county == "columbia" || $county == "dutchess" || $county == "albany"){
+	if($county == "ulster"  || $county == "columbia" || $county == "dutchess" || $county == "albany" || $county == "schoharie"){
 		while( $row=mysqli_fetch_array($query) ) {  // preparing an array
 			$nestedData=array();
 			$nestedData[] = $row["voter_id"];
 			$nestedData[] = $row["first_name"];
 			$nestedData[] = $row["last_name"];
 			$nestedData[] = $row["street_no"] . " " . $row["street_name"] . ", " . $row["city1"] . ", " . $row["state1"] . ", " . $row["zip1"];
-			$nestedData[] = $row["address1"] . ", " . $row["city2"] . ", " . $row["state2"] . ", " . $row["zip2"];
 			$nestedData[] = $row["party"];
 			
 			$data[] = $nestedData;
@@ -103,7 +101,6 @@ $columns = array(
 			$nestedData[] = $row["first_name"];
 			$nestedData[] = $row["last_name"];
 			$nestedData[] = $row["street_no"] . " " . $row["street_name"] . ", " . $row["city1"] . ", " . $row["state1"] . ", " . $row["zip1"];
-			$nestedData[] = $row["address1"] . ", " . $row["address4"];
 			$nestedData[] = $row["party"];
 			
 			$data[] = $nestedData;
@@ -116,7 +113,6 @@ $columns = array(
 			$nestedData[] = $row["first_name"];
 			$nestedData[] = $row["last_name"];
 			$nestedData[] = $row["street_no"] . " " . $row["street_name"] . ", " . $row["city1"] . ", " . $row["zip1"];
-			$nestedData[] = $row["address1"] . ", " . $row["address4"];
 			$nestedData[] = $row["party"];
 			
 			$data[] = $nestedData;
