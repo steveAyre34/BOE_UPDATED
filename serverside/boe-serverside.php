@@ -153,7 +153,7 @@ else if(isset($_POST["this_export"])){
 	$final_query = "SELECT voter_id, first_name, middle_name, last_name, street_no, street_name, apt_no, city, state, zip, zip4, count(voter_id) as count FROM ("
 					. $union_select . ") as t2 GROUP BY last_name, street_no, street_name, apt_no, city, state, zip";
 	
-	$file = fopen("php://memory", "w");
+	$file = fopen("sample.csv", "w");
 	fputcsv($file, ["Voter ID", "First Name", "Middle Name", "Last Name", "Mail Address", "City", "State", "ZIP", "ZIP+4"]);
 	$result_final = mysqli_query($conn, $final_query);
 	while($voter = $result_final->fetch_assoc()){
@@ -170,10 +170,9 @@ else if(isset($_POST["this_export"])){
 	}
 	fseek($file, 0);
 	header('Content-Type: application/csv');
-    header('Content-Disposition: attachment; filename="sample.txt";');
-    fpassthru($file);
-	fclose($file);
-	echo json_encode("success");
+    header('Content-Disposition: attachment; filename="sample.csv";');
+	header('location: sample.csv');
+	//echo json_encode("sample.csv");
 }
 
 /*Return Code definitions from codes table*/

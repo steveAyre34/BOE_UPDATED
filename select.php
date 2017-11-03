@@ -75,10 +75,6 @@
 			<p><u>Queued Results</u><a class = "clear-queue-btn">clear</a></p>
 			<ul class = "queued-results-list">
 			</ul>
-			<form action = "serverside/download.php" method = "post">
-				<input type = "text" value = "sample.txt" name = "file_location" readonly>
-				<input type = "submit">
-			</form>
 		</div>
 		<div class = "section-div">
 			<div class = "title">
