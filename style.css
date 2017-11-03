@@ -1,0 +1,88 @@
+body{
+	background: #dbdbdb;
+	font-style: Helvetica;
+	min-width: 1300px;
+}
+.hotbuttons-div{
+	float: right;
+	margin-right: 35px;
+	display: inline-block;
+}
+.hotbutton{
+	display: inline-block;
+	background: #274fad;
+	color: white;
+	padding: 5px 5px 5px 5px;
+	cursor: pointer;
+}
+.reset-btn{
+	background: #890000;
+}
+.content-div{
+	background: white;
+	clear: both;
+	border-radius: 10px;
+}
+.section-div{
+	border-radius: 3px;
+	width: 50%;
+	margin-left: 10px;
+	margin-top: 10px;
+	background: #dbdbdb;
+	border: 10px solid white;
+	display: inline-block;
+}
+.section-option{
+	margin: 10px 10px 10px 10px;
+}
+.dropdown-select{
+	height: 30px;
+}
+.checkbox-options-div{
+	display: inline-block;
+}
+.number-option{
+	height: 30px;
+	width: 100px
+}
+.title{
+	font-size: 20px;
+	padding: 5px 5px 5px 5px;
+}
+.page-title{
+	font-size: 30px;
+	display: inline-block;
+}
+.dynamic-list-item{
+	display: inline-block; 
+	background: #0043af; 
+	color: white; 
+	margin-right: 5px; 
+	padding: 5px 5px 5px 5px;
+	border-radius: 4px;
+}
+.dynamic-list-item-delete-btn{
+	margin-left: 10px;
+	color: #d30000;
+	font-family: Lucida Console;
+	cursor: pointer;
+}
+.results-div{
+	display: inline-block;
+	float: right;
+	box-shadow: 1px 1px 1px 1px;
+	padding: 5px 5px 5px 5px;
+	margin-right: 175px;
+	margin-top: 21px;
+	width: 30%;
+	border-radius: 8px 8px 8px 8px;
+	background: #dbdbdb;
+}
+.clear-queue-btn{
+	color: #5b749e;
+	float: right;
+}
+.clear-queue-btn:hover{
+	cursor: pointer;
+	background
+}
