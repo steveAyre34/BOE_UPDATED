@@ -4,19 +4,10 @@
 <body>
 	<div class = "page-title">
 		<span>BOE Filter</span>
-		<div class = "checkbox-options-div">
-			<select class = "dropdown-select">
-				<option>--Select County--</option>
-				<option>Ass Nut</option>
-				<option>Dick Fart</option>
-				<option>Weiner Mobile</option>
-			</select>
-		</div>
 	</div>
 	<div class = "hotbuttons-div">
 		<div class = "hotbutton retrieve-query-btn"><span>Retrieve Query</span></div>
 		<div class = "hotbutton add-to-query-btn"><span>Add to Queue</span></div>
-		<div class = "hotbutton export-query-btn"><span>Export Queue</span></div>
 		<div class = "hotbutton reset-btn"><span>Reset</span></div>
 	</div>
 	<div class = "content-div">
@@ -75,6 +66,9 @@
 			<p><u>Queued Results</u><a class = "clear-queue-btn">clear</a></p>
 			<ul class = "queued-results-list">
 			</ul>
+			<form class = "export-form" action = "serverside/boe-serverside.php" method = "POST">
+				<input class = "export-btn" type = "submit" value = "Export">
+			</form>
 		</div>
 		<div class = "section-div">
 			<div class = "title">

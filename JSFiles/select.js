@@ -14,6 +14,16 @@ var householded_queue_count = 0;
 var current_query = "";
 
 (function(){
+	/*Destroy Queue Session on page load*/
+	$.ajax({
+		type: "POST",
+		url: "./serverside/boe-serverside.php",
+		data: JSON.stringify({clear_queue: {}}),
+		contentType: "application/json", // Set the data type so jQuery can parse it for you
+		success: function (response){
+			$('.queued-results-list').html("");
+		}
+	});
 	/*Reset checkboxes selected and trigger change event*/
 	$(document).on("click", '.reset-btn', function(){
 		$('.checkbox-select').prop("checked", false);
@@ -243,11 +253,15 @@ var current_query = "";
 			var query_name = prompt("Title of query(45 characters)");
 			var check_exists = checkQueueStatements(query_name);
 			if(query_name != null && query_name.length <= 45 && query_name != "" && !check_exists){
-				queue_statements.push({
-					name: query_name,
-					query: current_query
+				$.ajax({
+					type: "POST",
+					url: "./serverside/boe-serverside.php",
+					data: JSON.stringify({add_to_queue: {name: query_name, query: current_query}}),
+					contentType: "application/json", // Set the data type so jQuery can parse it for you
+					success: function (response){
+						$('.queued-results-list').append('<li>' + query_name + '</li>');
+					}
 				});
-				$('.queued-results-list').append('<li>' + query_name + '</li>');
 			}
 			else if(query_name.length > 45){ //error checks
 				alert("Name exceeds max length");
@@ -269,24 +283,33 @@ var current_query = "";
 	
 	/*clear queue results*/
 	$(document).on("click", '.clear-queue-btn', function(){
-		queue_statements = [];
-		$('.queued-results-list').html("");
-	});
-	
-	/*======================================
-	 *==============EXPORT==================
-	 *======================================*/
-	$(document).on("click", '.export-query-btn', function(){
 		$.ajax({
 			type: "POST",
 			url: "./serverside/boe-serverside.php",
-			data: JSON.stringify({this_export: {queries: queue_statements}}),
+			data: JSON.stringify({clear_queue: {}}),
 			contentType: "application/json", // Set the data type so jQuery can parse it for you
 			success: function (response){
-				
+				$('.queued-results-list').html("");
 			}
 		});
+		$('.queued-results-list').html("");
 	});
+	
+	
+	/*======================================
+	 *==========EXPORT CHECK================
+	 *======================================*/
+	 
+	$(document).on("click", '.export-btn', function(e){
+		if($(".queued-results-list li").length == 0){
+			e.preventDefault();
+			alert("Queue Empty");
+		}
+		else{
+			submitForm('.export-form');
+		}
+	});
+	
 })();
 
 /*======================================
@@ -373,7 +396,7 @@ function addDynamicDropdown(div, this_id){
 	$.ajax({
 		type: "POST",
 		url: "./serverside/boe-serverside.php",
-		data: JSON.stringify({get_column_info: {columnName: this_id, countyName: "columbia"}}),
+		data: JSON.stringify({get_column_info: {columnName: this_id, countyName: "albany"}}),
 		contentType: "application/json", // Set the data type so jQuery can parse it for you
 		success: function (response){
 			$('.' + div.split(' ').join('.')).after('<div class = "checkbox-options-div ' + this_id + '-dynamic-dropdown-div">'
@@ -517,4 +540,8 @@ function removeVotingHistory(){
 		 }
 	 }
 	 return flag;
+ }
+ 
+ function submitForm(this_form){
+	 $(this_form).submit();
  }
