@@ -155,6 +155,7 @@ var current_query = "";
 	//Retrieve Query with count
 	//-------------------------------------
 	$(document).on("click", '.retrieve-query-btn', function(){
+		$('.loading-query').css("visibility", "visible");
 		var this_search_criteria = [];
 		$('.checkbox-select:checked').each(function(){
 			var this_id = $(this).attr("id");
@@ -221,9 +222,10 @@ var current_query = "";
 		$.ajax({
 			type: "POST",
 			url: "./serverside/boe-serverside.php",
-			data: JSON.stringify({retrieve_query: {searchCriteria: this_search_criteria}}),
+			data: JSON.stringify({retrieve_query: {countyName: $('.county-name').val(), searchCriteria: this_search_criteria}}),
 			contentType: "application/json", // Set the data type so jQuery can parse it for you
 			success: function (response){
+				$('.loading-query').css("visibility", "hidden");
 				$('.Individual-result').text(response["count"]);
 				$('.householded-result').text(response["count_householded"]);
 				$(".current-query-div").css("background", "#ceffd2");
@@ -393,12 +395,16 @@ function removeDateInputs(this_id){
 /*add a dynamic dropdown based on checkbox selected*/
 /*Calls database in order to retrieve appropriate data*/
 function addDynamicDropdown(div, this_id){
+	$('.' + div.split(' ').join('.')).after('<div class = "loading-div dropdown-load">'
+												+'<img width = "20" height = "20" src = "loader.gif">'
+											+'</div>');
 	$.ajax({
 		type: "POST",
 		url: "./serverside/boe-serverside.php",
-		data: JSON.stringify({get_column_info: {columnName: this_id, countyName: "albany"}}),
+		data: JSON.stringify({get_column_info: {columnName: this_id, countyName: $('.county-name').val()}}),
 		contentType: "application/json", // Set the data type so jQuery can parse it for you
 		success: function (response){
+			$('.dropdown-load').remove();
 			$('.' + div.split(' ').join('.')).after('<div class = "checkbox-options-div ' + this_id + '-dynamic-dropdown-div">'
 														+'<select class = "dropdown-select dynamic-dropdown-selection ' + this_id + '-dynamic-dropdown" id = "' + this_id + '">'
 															+'<option>--Select ' + this_id + '--</option>'

@@ -4,6 +4,7 @@
 <body>
 	<div class = "page-title">
 		<span>BOE Filter</span>
+		<input class = "checkbox-input county-name" value = "<?php echo $_GET["counties"]; ?>" readonly>
 	</div>
 	<div class = "hotbuttons-div">
 		<div class = "hotbutton retrieve-query-btn"><span>Retrieve Query</span></div>
@@ -12,6 +13,9 @@
 	</div>
 	<div class = "content-div">
 		<div class = "results-div current-query-div">
+			<div class = "loading-div loading-query">
+				<img width = "20" height = "20" src = "loader.gif">
+			</div>
 			<p><u>Current Query Results</u></p>
 			<p><b>Est. Individual Count: </b><span class = "Individual-result"></span></p>
 			<p><b>Est. Householded Count: </b><span class = "householded-result"></span></p>

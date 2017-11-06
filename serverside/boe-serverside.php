@@ -21,6 +21,16 @@ if(isset($_POST["get_county_list"])){
 	
 	echo json_encode($data_array);
 }
+/*RETURNS: all counties currently in the updated list*/
+else if(isset($_POST["get_counties"])){
+	$data_array = array();
+	$result = mysqli_query($conn, "SELECT county_name FROM updated_counties");
+	while($county = $result->fetch_assoc()){
+		array_push($data_array, $county["county_name"]);
+	}
+	
+	echo json_encode($data_array);
+}
 /*Get general information based on column selected*/
 /*PARAMS: column, county(lowercase letters)*/
 /*RETURNS: count with what the count represents*/
@@ -48,7 +58,7 @@ else if(isset($_POST["get_column_info"])){
 }
 
 /*Retrieves query along with counts for householded and individual counts
- *PARAMS: searchCriteria(type array) {columnName, match, value, type}
+ *PARAMS: county, searchCriteria(type array) {columnName, match, value, type}
  *RETURNS: Query, Individual Count, Householded Count Grouped by last name and address*/
 else if(isset($_POST["retrieve_query"])){
 	$data_array = array();
@@ -58,7 +68,8 @@ else if(isset($_POST["retrieve_query"])){
 							 "greater than" => ">="
 					);
 	$searchCriteria = $_POST["retrieve_query"]->searchCriteria;
-	$query = "SELECT count(*) as count FROM albany_import WHERE 1=1";
+	$county = $_POST["retrieve_query"]->countyName;
+	$query = "SELECT count(*) as count FROM " . $county . "_import WHERE 1=1";
 	for($i = 0; $i < count($searchCriteria); $i++){
 		$columnName = $searchCriteria[$i]->columnName;
 		$match = $searchCriteria[$i]->match;

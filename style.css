@@ -86,3 +86,9 @@ body{
 	cursor: pointer;
 	background
 }
+.loading-div{
+	display: inline-block;
+}
+.loading-query{
+	visibility: hidden;
+}
