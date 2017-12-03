@@ -211,29 +211,75 @@ else{
 	}
 	
 	$union_select = implode(" UNION ", $union_queries);
-	$final_query = "SELECT t2.voter_id, first_name, middle_name, last_name, street_no, street_name, apt_no, $verified.address1, $verified.address2, t2.city, t2.state, t2.zip, t2.zip4, $verified.crrt, $verified.dp3, $verified.foreign_city, $verified.foreign_country, $verified.foreign_pc, count(t2.voter_id) as count FROM ("
-					. $union_select . ") as t2, $verified WHERE $verified.voter_id = t2.voter_id GROUP BY last_name, street_no, street_name, apt_no, city, state, zip";
+	$final_query = "SELECT t2.voter_id as voter_id, first_name, middle_name, last_name, street_no, street_name, apt_no, t2.city, t2.state, t2.zip, t2.zip4, count(t2.voter_id) as count FROM ("
+					. $union_select . ") as t2 GROUP BY last_name, street_no, street_name, apt_no, city, state, zip";
 	
+	
+	$verified_query = "SELECT * FROM $verified";
 	
 	$file = fopen("php://memory", "w");
 	fputcsv($file, ["Voter ID", "First Name", "Middle Name", "Last Name", "Street #", "Street Name", "Apt No.", "Address Line 1", "Address Line 2", "City", "State", "ZIP", "ZIP+4", "CRRT", "DP3", "Foreign City", "Foreign Country", "Foreign Postal Code", "Family Members"]);
 	$result_final = mysqli_query($conn, $final_query);
+	$result_verified = mysqli_query($conn, $verified_query);
+	$result_final_array = array();
+	$result_final_ids = array();
+	$result_verified_array = array();
+	$result_verified_ids = array();
+	$voter_id_keys = array();
+	
 	while($voter = $result_final->fetch_assoc()){
 		$voter = array_map('rtrim', $voter);
+		$voter_id = $voter["voter_id"];
 		if($voter["count"] == 1){
+			$result_final_ids[$voter["voter_id"]] = $voter["voter_id"];
 			$voter["first_name"] = ucfirst(strtolower($voter["first_name"]));
 			$voter["middle_name"] = ucfirst(strtolower($voter["middle_name"]));
 			$voter["last_name"] = ucfirst(strtolower($voter["last_name"]));
-			fputcsv($file, $voter);
+			$result_final_array[$voter["voter_id"]] = $voter;
 		}
 		else{
+			$result_final_ids[$voter["voter_id"]] = $voter["voter_id"];
 			$voter["voter_id"] = "";
 			$voter["first_name"] = "";
 			$voter["middle_name"] = "";
 			$voter["last_name"] = "The " . ucfirst(strtolower($voter["last_name"])) . " Family";
-			fputcsv($file, $voter);
+			$result_final_array[$voter_id] = $voter;
 		}
 	}
+	
+	array_push($voter_id_keys, $result_final_ids);
+	
+	while($voter = $result_verified->fetch_assoc()){
+		$voter = array_map('rtrim', $voter);
+		$result_verified_array[$voter["voter_id"]] = $voter;
+		$result_verified_ids[$voter["voter_id"]] = $voter["voter_id"];
+	}
+	
+	array_push($voter_id_keys, $result_verified_ids);
+	$voter_id_keys = call_user_func_array('array_intersect', $voter_id_keys);
+
+	foreach($voter_id_keys as $id){
+		fputcsv($file, array($result_final_array[$id]["voter_id"], 
+							 $result_final_array[$id]["first_name"], 
+							 $result_final_array[$id]["middle_name"], 
+							 $result_final_array[$id]["last_name"], 
+							 $result_final_array[$id]["street_no"], 
+							 $result_final_array[$id]["street_name"], 
+							 $result_final_array[$id]["apt_no"], 
+							 $result_verified_array[$id]["address1"],
+							 $result_verified_array[$id]["address2"],
+							 $result_final_array[$id]["city"],
+							 $result_final_array[$id]["state"],
+							 $result_final_array[$id]["zip"],
+							 $result_final_array[$id]["zip4"],
+							 $result_verified_array[$id]["crrt"],
+							 $result_verified_array[$id]["dp3"],
+							 $result_verified_array[$id]["foreign_city"],
+							 $result_verified_array[$id]["foreign_country"],
+							 $result_verified_array[$id]["foreign_pc"],
+							 $result_final_array[$id]["count"],));
+	}
+	
 	fseek($file, 0);
 	header('Content-Type: application/csv');
     header('Content-Disposition: attachment; filename="' . $file_name . '.txt";');
