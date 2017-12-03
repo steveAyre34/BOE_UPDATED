@@ -179,6 +179,13 @@ else if(isset($_POST["add_to_queue"])){
 	echo json_encode("Success");
 }
 
+/*Set county*/
+else if(isset($_POST["county_session"])){
+	session_start();
+	$county = $_POST["county_session"]->countyName;
+	$_SESSION["county"] = $county;
+	echo json_encode("success");
+}
 /*Unset queue when cleared or leaving page*/
 else if(isset($_POST["clear_queue"])){
 	session_start();
@@ -190,8 +197,12 @@ else if(isset($_POST["clear_queue"])){
 else{
 	session_start();
 	$queries = $_SESSION["queue"];
+	$county = $_SESSION["county"];
+	$verified = $county . "_verified";
 	$columns_selected = " voter_id, first_name, middle_name, last_name, street_no, street_name, apt_no, city, state, zip, zip4 ";
 	$union_queries = array();
+	
+	$file_name = array_keys($queries)[0];
 	
 	foreach($queries as $query){
 		$query_statement_1 = explode(" count(*) as count ", $query)[0];
@@ -200,27 +211,32 @@ else{
 	}
 	
 	$union_select = implode(" UNION ", $union_queries);
-	$final_query = "SELECT voter_id, first_name, middle_name, last_name, street_no, street_name, apt_no, city, state, zip, zip4, count(voter_id) as count FROM ("
-					. $union_select . ") as t2 GROUP BY last_name, street_no, street_name, apt_no, city, state, zip";
+	$final_query = "SELECT t2.voter_id, first_name, middle_name, last_name, street_no, street_name, apt_no, $verified.address1, $verified.address2, t2.city, t2.state, t2.zip, t2.zip4, $verified.crrt, $verified.dp3, $verified.foreign_city, $verified.foreign_country, $verified.foreign_pc, count(t2.voter_id) as count FROM ("
+					. $union_select . ") as t2, $verified WHERE $verified.voter_id = t2.voter_id GROUP BY last_name, street_no, street_name, apt_no, city, state, zip";
+	
 	
 	$file = fopen("php://memory", "w");
-	fputcsv($file, ["Voter ID", "First Name", "Middle Name", "Last Name", "Street #", "Street Name", "Apt No.", "City", "State", "ZIP", "ZIP+4", "Family Members"]);
+	fputcsv($file, ["Voter ID", "First Name", "Middle Name", "Last Name", "Street #", "Street Name", "Apt No.", "Address Line 1", "Address Line 2", "City", "State", "ZIP", "ZIP+4", "CRRT", "DP3", "Foreign City", "Foreign Country", "Foreign Postal Code", "Family Members"]);
 	$result_final = mysqli_query($conn, $final_query);
 	while($voter = $result_final->fetch_assoc()){
+		$voter = array_map('rtrim', $voter);
 		if($voter["count"] == 1){
+			$voter["first_name"] = ucfirst(strtolower($voter["first_name"]));
+			$voter["middle_name"] = ucfirst(strtolower($voter["middle_name"]));
+			$voter["last_name"] = ucfirst(strtolower($voter["last_name"]));
 			fputcsv($file, $voter);
 		}
 		else{
 			$voter["voter_id"] = "";
 			$voter["first_name"] = "";
 			$voter["middle_name"] = "";
-			$voter["last_name"] = "The " . $voter["last_name"] . " Family";
+			$voter["last_name"] = "The " . ucfirst(strtolower($voter["last_name"])) . " Family";
 			fputcsv($file, $voter);
 		}
 	}
 	fseek($file, 0);
 	header('Content-Type: application/csv');
-    header('Content-Disposition: attachment; filename="sample.csv";');
+    header('Content-Disposition: attachment; filename="' . $file_name . '.txt";');
 	fpassthru($file);
 }
 

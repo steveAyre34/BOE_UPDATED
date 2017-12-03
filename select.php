@@ -108,6 +108,12 @@
 				</div>
 			</div>
 			<div class = "section-option">
+				<div class = "checkbox-options-div school_district-div">
+					<input type = "checkbox" class = "checkbox-input dynamic-dropdown checkbox-select" id = "school_district"></input>
+					<label>School District</label>
+				</div>
+			</div>
+			<div class = "section-option">
 				<div class = "checkbox-options-div asm_district-div">
 					<input type = "checkbox" class = "checkbox-input dynamic-dropdown checkbox-select" id = "asm_district"></input>
 					<label>Assembly District</label>

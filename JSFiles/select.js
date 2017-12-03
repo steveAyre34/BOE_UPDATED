@@ -24,6 +24,19 @@ var current_query = "";
 			$('.queued-results-list').html("");
 		}
 	});
+	
+	/*Save county into session*/
+	window.onload = function(){
+		$.ajax({
+			type: "POST",
+			url: "./serverside/boe-serverside.php",
+			data: JSON.stringify({county_session: {countyName: $('.county-name').val()}}),
+			contentType: "application/json", // Set the data type so jQuery can parse it for you
+			success: function (response){
+				
+			}
+		});
+	}
 	/*Reset checkboxes selected and trigger change event*/
 	$(document).on("click", '.reset-btn', function(){
 		$('.checkbox-select').prop("checked", false);
