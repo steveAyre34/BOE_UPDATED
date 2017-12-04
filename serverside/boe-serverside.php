@@ -190,11 +190,15 @@ else if(isset($_POST["county_session"])){
 else if(isset($_POST["clear_queue"])){
 	session_start();
 	unset($_SESSION["queue"]);
+	echo json_encode("success");
 }
 
 /*Export into CSV file
  *REQUIRES: Session queue to be set*/
 else{
+	ini_set("memory_limit", -1);
+	gc_enable();
+	gc_collect_cycles();
 	session_start();
 	$queries = $_SESSION["queue"];
 	$county = $_SESSION["county"];
@@ -215,71 +219,86 @@ else{
 					. $union_select . ") as t2 GROUP BY last_name, street_no, street_name, apt_no, city, state, zip";
 	
 	
-	$verified_query = "SELECT * FROM $verified";
+	$verified_query = "SELECT voter_id, address1, address2, city, state, zip, zip4, crrt, dp3, foreign_city, foreign_country, foreign_pc FROM $verified";
 	
 	$file = fopen("php://memory", "w");
-	fputcsv($file, ["Voter ID", "First Name", "Middle Name", "Last Name", "Street #", "Street Name", "Apt No.", "Address Line 1", "Address Line 2", "City", "State", "ZIP", "ZIP+4", "CRRT", "DP3", "Foreign City", "Foreign Country", "Foreign Postal Code", "Family Members"]);
 	$result_final = mysqli_query($conn, $final_query);
 	$result_verified = mysqli_query($conn, $verified_query);
 	$result_final_array = array();
-	$result_final_ids = array();
-	$result_verified_array = array();
-	$result_verified_ids = array();
-	$voter_id_keys = array();
 	
 	while($voter = $result_final->fetch_assoc()){
 		$voter = array_map('rtrim', $voter);
 		$voter_id = $voter["voter_id"];
+		$unset_array = array("street_no", "street_name", "apt_no", "city", "state", "zip", "zip4");
+		for($i = 0; $i < count($unset_array); $i++){
+			unset($voter[$unset_array[$i]]);
+		}
 		if($voter["count"] == 1){
-			$result_final_ids[$voter["voter_id"]] = $voter["voter_id"];
 			$voter["first_name"] = ucfirst(strtolower($voter["first_name"]));
 			$voter["middle_name"] = ucfirst(strtolower($voter["middle_name"]));
 			$voter["last_name"] = ucfirst(strtolower($voter["last_name"]));
-			$result_final_array[$voter["voter_id"]] = $voter;
+			$result_final_array[$voter_id] = $voter;
 		}
 		else{
-			$result_final_ids[$voter["voter_id"]] = $voter["voter_id"];
 			$voter["voter_id"] = "";
 			$voter["first_name"] = "";
 			$voter["middle_name"] = "";
 			$voter["last_name"] = "The " . ucfirst(strtolower($voter["last_name"])) . " Family";
 			$result_final_array[$voter_id] = $voter;
 		}
+		
+		$result_final_array[$voter_id]["address1"] = "";
+		$result_final_array[$voter_id]["address2"] = "";
+		$result_final_array[$voter_id]["city"] = "";
+		$result_final_array[$voter_id]["state"] = "";
+		$result_final_array[$voter_id]["zip"] = "";
+		$result_final_array[$voter_id]["zip4"] = "";
+		$result_final_array[$voter_id]["crrt"] = "";
+		$result_final_array[$voter_id]["dp3"] = "";
+		$result_final_array[$voter_id]["foreign_city"] = "";
+		$result_final_array[$voter_id]["foreign_country"] = "";
+		$result_final_array[$voter_id]["foreign_pc"] = "";
 	}
-	
-	array_push($voter_id_keys, $result_final_ids);
 	
 	while($voter = $result_verified->fetch_assoc()){
-		$voter = array_map('rtrim', $voter);
-		$result_verified_array[$voter["voter_id"]] = $voter;
-		$result_verified_ids[$voter["voter_id"]] = $voter["voter_id"];
+		if(array_key_exists($voter["voter_id"], $result_final_array)){
+			$voter = array_map('rtrim', $voter);
+			$voter_id = $voter["voter_id"]; 
+			$result_final_array[$voter_id]["address1"] = $voter["address1"];
+			$result_final_array[$voter_id]["address2"] = $voter["address2"];
+			$result_final_array[$voter_id]["city"] = $voter["city"];
+			$result_final_array[$voter_id]["state"] = $voter["state"];
+			$result_final_array[$voter_id]["zip"] = $voter["zip"];
+			$result_final_array[$voter_id]["zip4"] = $voter["zip4"];
+			$result_final_array[$voter_id]["crrt"] = $voter["crrt"];
+			$result_final_array[$voter_id]["dp3"] = $voter["dp3"];
+			$result_final_array[$voter_id]["foreign_city"] = $voter["foreign_city"];
+			$result_final_array[$voter_id]["foreign_country"] = $voter["foreign_country"];
+			$result_final_array[$voter_id]["foreign_pc"] = $voter["foreign_pc"];
+		}
 	}
 	
-	array_push($voter_id_keys, $result_verified_ids);
-	$voter_id_keys = call_user_func_array('array_intersect', $voter_id_keys);
-
-	foreach($voter_id_keys as $id){
-		fputcsv($file, array($result_final_array[$id]["voter_id"], 
-							 $result_final_array[$id]["first_name"], 
-							 $result_final_array[$id]["middle_name"], 
-							 $result_final_array[$id]["last_name"], 
-							 $result_final_array[$id]["street_no"], 
-							 $result_final_array[$id]["street_name"], 
-							 $result_final_array[$id]["apt_no"], 
-							 $result_verified_array[$id]["address1"],
-							 $result_verified_array[$id]["address2"],
-							 $result_final_array[$id]["city"],
-							 $result_final_array[$id]["state"],
-							 $result_final_array[$id]["zip"],
-							 $result_final_array[$id]["zip4"],
-							 $result_verified_array[$id]["crrt"],
-							 $result_verified_array[$id]["dp3"],
-							 $result_verified_array[$id]["foreign_city"],
-							 $result_verified_array[$id]["foreign_country"],
-							 $result_verified_array[$id]["foreign_pc"],
-							 $result_final_array[$id]["count"],));
+	fputcsv($file, ["Voter ID", "Name", "Address Line 1", "Address Line 2", "City", "State", "ZIP", "ZIP4", "CRRT", "DP3", "Foreign City", "Foreign Country", "Foreign Postal Code", "Family Members"]);
+	foreach($result_final_array as $voter){
+		$full_name = preg_replace('/\s\s+/', ' ', $voter["first_name"] . " " . $voter["middle_name"] . " " . $voter["last_name"]);
+		$full_name = trim($full_name);
+		fputcsv($file, array($voter["voter_id"], 
+							 $full_name,
+							 $voter["address1"],
+							 $voter["address2"],
+							 $voter["city"],
+							 $voter["state"],
+							 $voter["zip"],
+							 $voter["zip4"],
+							 $voter["crrt"],
+							 $voter["dp3"],
+							 $voter["foreign_city"],
+							 $voter["foreign_country"],
+							 $voter["foreign_pc"],
+							 $voter["count"],));
 	}
 	
+	gc_collect_cycles();
 	fseek($file, 0);
 	header('Content-Type: application/csv');
     header('Content-Disposition: attachment; filename="' . $file_name . '.txt";');

@@ -1,4 +1,5 @@
 <link href="style.css" rel="stylesheet">
+<link rel="shortcut icon" type="image/png" href="images/boe_select_logo.png">
 <script src="JSFiles/jquery-3.2.1.min.js"></script>
 <script src = "JSFiles/select.js"></script>
 <body>
